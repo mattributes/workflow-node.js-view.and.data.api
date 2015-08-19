@@ -1,0 +1,124 @@
+html {
+    height: 100%;
+    font-family: Frutiger, sans-serif;
+    font-size: 14px;
+    color: #666; 
+}
+
+body {
+   margin: 0;
+   height: 100%
+}
+
+a {
+  color: rgb(119, 119, 119);  
+}
+
+header {
+  background-color: #f5f5f5;
+  height: 5%;  
+}
+
+footer {
+  background-color: #f5f5f5;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3%;  
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#mainLogo {
+  padding: 15px;
+}
+
+#mainView {
+   position: absolute;
+   width: 80%;
+   height: 87%;
+   right: 0px;
+}
+
+#viewerDiv {
+   height: 60%;
+   width: 100%;
+   overflow: hidden;
+   position: relative;
+}
+
+#modelBrowser {
+   position: relative;
+   left: 0px;
+   height: 5%;
+   width: 100%;
+}
+
+#resultsData {
+  position: relative;
+  height: 35%;
+}
+
+#simulationCtrls {
+  position: relative;
+  background-color: #f5f5f5;
+  height: 5%;
+}
+
+#commentPanel{
+   position: absolute;
+   left: 0px;
+   height: 87%;
+   width: 20%;
+}
+
+.placeholder {
+   font-style: italic;
+   text-align: center;
+}
+
+#noResults {
+  padding-top: 15px;
+}
+
+#resultTools {
+  left: 33%;
+  top: 10px;
+  position: relative;
+  display: none;
+}
+
+#signIn{
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+#signOut {
+  display: none;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+#notifications {
+  position: relative;
+}
+
+.userName {
+  font-weight: bold;
+}
+
+.notificationContent{
+
+}
+
+.notificationItem {
+  border: solid 1px;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+}
+

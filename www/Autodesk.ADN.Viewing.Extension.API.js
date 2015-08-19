@@ -345,7 +345,8 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   //
   ///////////////////////////////////////////////////////
   function isCssLoaded(name) {
-
+    // TODO: there is a bug here, we had bootstrap loaded, Dylan just returning true
+    return true;
     for(var i=0; i < document.styleSheets.length; ++i){
 
       var styleSheet = document.styleSheets[i];

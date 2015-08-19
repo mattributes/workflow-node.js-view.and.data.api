@@ -15,15 +15,17 @@
 // DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 ////////////////////////////////////////////////////////////////////////////////-->
+<!DOCTYPE html>
 <html>
 <head>
 
-    <title>ADN Viewer Demo</title>
+    <title>Hackathon – Pseudo Autodesk Simulation Pre-Processor</title>
 
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-2.1.2.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
     <!-- Viewer staging -->
     <link type="text/css" rel="stylesheet" href="https://developer-stg.api.autodesk.com/viewingservice/v1/viewers/style.css"/>
@@ -38,15 +40,96 @@
     <script src="https://rawgit.com/Developer-Autodesk/library-javascript-view.and.data.api/master/js/Autodesk.ADN.Toolkit.Viewer.js"></script>
 
     <script src="/bower_components/underscore/underscore-min.js"></script>
+    <script src="/Autodesk.ADN.Viewing.Extension.API.js"></script>
     <script src="/injectionAttributes.js"></script>
     <script src="/simulationEngine.js"></script>
-    <script src="/Autodesk.ADN.Viewing.Extension.API.js"></script>
     <script src="/index.js"></script>
+
+    <!-- Autodesk's CSSS -->
+    <link rel="stylesheet" type="text/css" href="http://static-dc.autodesk.net/etc/designs/v201507291911/templates-general/structure/clientlibs.min.css"/>
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" href="css/main.css" />
+
+     <script type="text/javascript">
+        var WebFontConfig = {
+            custom: {
+                families: [
+                    'Frutiger:i4,n3,n7,n4'
+                ],
+                urls:[
+                    //<cdn:rewrite path="/etc/designs/templates-general/structure/fonts/frutiger/clientlibs/frutiger.css"/>
+                    'http://static-dc.autodesk.net/etc/designs/templates-general/structure/fonts/frutiger/clientlibs/frutiger.css'
+                ]
+            }
+        };
+        (function() {
+            document.getElementsByTagName("html")[0].className += " wf-loading";
+            var wf = document.createElement('script');
+            wf.src = 'http://static-dc.autodesk.net/etc/designs/templates-general/structure/clientlibs/js/webfont.js';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    </script>
 
 </head>
 
-<body style="margin:0">
-    <div id="viewerDiv"></div>
+    <body>
+        <header> 
+            <a href="/" target="_self">
+                <img alt="Hackathon – Pseudo Autodesk Simulation Pre-Processor" src="http://static-dc.autodesk.net/etc/designs/v201412151200/autodesk/adsk-design/images/autodesk_header_logo_140x23.png" id="mainLogo">
+            </a>
 
-</body>
+           <div id="navbar" class="navbar-collapse collapse">
+                <div id="loggedOutNav">
+                    <form class="navbar-form navbar-right" role="form" name="login">
+                        <button id="signIn" type="button" class="btn btn-primary right">Sign in</button>
+                        <button id="signOut" type="button" class="btn btn-primary right">Sign out</button>     
+                    </form>
+                </div>
+                <div id="loggedInNav" style="display:none">
+                    <form class="navbar-form navbar-right" role="form" name="logout">
+                        <p class="navbar-text" style="margin-top:7px;margin-bottom:7px;">Welcome!</p>
+                        <button type="button" class="btn btn-danger">Log Out</button>
+                    </form>
+                </div>
+            </div>
+
+        </header>
+
+        <nav id="modelBrowser" class="placeholder">
+            <!-- TODO: pick your model / upload a new one here? -->
+            Model selector / uploader place holder
+        </nav>
+
+        <aside id="commentPanel" class="placeholder">
+            <!-- TODO: comments/notifications here? -->
+            Comments place holder
+        </aside>
+
+        <!-- Main content - viewer, action and results -->
+        <section id="mainView">
+            <!-- TODO: takes time to load the model, can we have some feedback =? -->
+            <div id="viewerDiv"></div>
+            <div id="simulationCtrls">
+                <button id="solve" type="button" class="btn btn-primary left"><img src="images/solve-cloud.png">Solve</button>
+                <div id="noResults" class='placeholder'>There are no results to show yet</div>
+                <span id="resultTools">
+                    <input type="checkbox" name="viewResults" checked> View results | Time frame: <input type="range" name="frame" min="0" max="10"> (s)
+                </span>
+            </div>
+            <div id="resultsData" class="placeholder">
+                None canvas based results go here (placeholder)
+            </div>
+        </section>
+
+        <footer>
+            <a href="http://www.autodesk.com/company/legal-notices-trademarks/privacy-statement">Privacy/Cookies (Updated)</a> | 
+            <a href="http://www.autodesk.com/company/legal-notices-trademarks">Legal Notices &amp; Trademarks</a> | 
+            <a href="http://www.autodesk.com/reportpiracy">Report Noncompliance</a> | 
+            &copy; 2015 Autodesk Inc. All rights reserved
+        </footer>
+        
+    </body>
 </html>
