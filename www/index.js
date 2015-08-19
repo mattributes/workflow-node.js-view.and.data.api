@@ -15,13 +15,15 @@
 // DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 /////////////////////////////////////////////////////////////////////////////////
-var defaultUrn = '<replace with your encoded urn>';
+
+// Example part (MF card holder, "shell_1_of_mfx_card_holder.stl")
+var defaultUrn = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs';
 
 $(document).ready(function () {
     var tokenurl = 'http://' + window.location.host + '/api/token';
     var config = {
-        environment : 'AutodeskProduction'
-		//environment : 'AutodeskStaging'
+        //environment : 'AutodeskProduction'
+		environment : 'AutodeskStaging'
     };
 
     // Instantiate viewer factory
