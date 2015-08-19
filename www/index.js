@@ -37,17 +37,27 @@ $(document).ready(function () {
 
     viewerFactory.getViewablePath (urn,
         function(pathInfoCollection) {
-            var viewerConfig = {
-                viewerType: 'GuiViewer3D'
+            /*var viewerConfig = {
+                viewerType: 'GuiViewer3D',
+                extensions: ['ADN Simple Extension']
             };
 
             var viewer = viewerFactory.createViewer(
                 $('#viewerDiv')[0],
-                viewerConfig);
+                viewerConfig);*/
+
+            var viewer = new Autodesk.Viewing.Private.GuiViewer3D(
+                $('#viewerDiv')[0],
+                {
+                    viewerType: 'GuiViewer3D',
+                    extensions: ['Autodesk.ADN.Viewing.Extension.UIComponent']
+                }
+            );
+
+            viewer.start();
+            viewer.load(pathInfoCollection.path3d[0].path);
 
             window.viewer = viewer;
-
-            viewer.load(pathInfoCollection.path3d[0].path);
 
             im = new InjectionManager(viewer);
             console.log(im);
