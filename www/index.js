@@ -45,6 +45,8 @@ $(document).ready(function () {
                 $('#viewerDiv')[0],
                 viewerConfig);
 
+            window.viewer = viewer;
+
             viewer.load(pathInfoCollection.path3d[0].path);
 
             im = new InjectionManager(viewer);

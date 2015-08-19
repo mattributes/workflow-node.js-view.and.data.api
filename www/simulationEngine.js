@@ -1,26 +1,67 @@
-var pts_ = [];
-var inj_pts_ = [];
+var runSimulation = function()
+{
+	var pts_ = [];
+	var inj_pts_ = [];
+
+	var modelData = configureSimulation();
+	var res = runSimulationInternal(modelData.pts, modelData.inj_pts);
+	return res;
+}
 
 var configureSimulation = function()
 {
-	var n_pts = 100;
+	var res = {
+		pts: [],
+		inj_pts: []
+	}
+
+	var renderProxy = viewer.impl.getRenderProxy(viewer.model, 0);
+	var geom = renderProxy.geometry;
+	var stride = geom.vbstride;
+	var coords = geom.vb;
+
+	// mesh points
+	var pt_count = 0;
+	for(var i=0; i<coords.length; i=i+stride, pt_count++){
+		res.pts.push({
+			id: pt_count,
+			xyz: [coords[i], coords[i+1], coords[i+2]]
+		})
+	}
+
+	//injection points
 	var n_inj_pts = 3;
-
-	for(var i=0; i<n_pts; i++){
-		pts_.push(
-			{
-				id: i,
-				xyz: [Math.random(), Math.random(), Math.random()]
-			});
-	}
-
 	for(var i=0; i<n_inj_pts; i++){
-		inj_pts_.push(
+		res.inj_pts.push(
 			{
 				id: i,
 				xyz: [Math.random(), Math.random(), Math.random()]
 			});
 	}
+
+	return res;
+
+	// var n_pts = 100;
+	// var n_inj_pts = 3;
+
+	// for(var i=0; i<n_pts; i++){
+	// 	pts_.push(
+	// 		{
+	// 			id: i,
+	// 			xyz: [Math.random(), Math.random(), Math.random()]
+	// 		});
+	// }
+
+	// for(var i=0; i<n_inj_pts; i++){
+	// 	inj_pts_.push(
+	// 		{
+	// 			id: i,
+	// 			xyz: [Math.random(), Math.random(), Math.random()]
+	// 		});
+	// }
+
+
+
 }
 
 function pointToPointDistance3D(p, q)
@@ -47,7 +88,7 @@ function getClosestInjectionPoint(p, inj_p)
 	return closest_id;
 }
 
-var runSimulation = function(pts, inj_pts)
+var runSimulationInternal = function(pts, inj_pts)
 {
 	console.log("Running simluation... ", "Points: ", pts, "Injection Points: ", inj_pts);
 
@@ -70,9 +111,9 @@ var simulatePointTime = function(p, inj_pts)
 	return res;
 }
 
-configureSimulation();
-var res = runSimulation(pts_, inj_pts_);
-console.log("Simulation Results: ", res);
+// configureSimulation();
+// var res = runSimulation(pts_, inj_pts_);
+// console.log("Simulation Results: ", res);
 
 
 
