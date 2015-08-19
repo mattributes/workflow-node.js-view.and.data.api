@@ -15,7 +15,7 @@ var InjectionManager = function(viewer){
 
 	var self = this;	
 	$("#viewerDiv").click(function(e) {
-		self.add(viewer.utilities.getHitPoint(e.offsetX/e.screenX, e.offsetY/e.screenY));
+		self.add(viewer.utilities.getHitPoint(e.pageX/viewer.container.offsetWidth, e.pageY/viewer.container.offsetHeight));
 	});
 
 	this.all = [];
