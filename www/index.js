@@ -31,9 +31,6 @@ $(document).ready(function () {
         tokenurl,
         config);
 
-    var viewerApp = new Autodesk.Viewing.ViewingApplication('viewerApp');
-    viewerApp.addItemSelectedObserver(function() {alert('ffdf')});
-
     // Allows different urn to be passed as url parameter
     var paramUrn = Autodesk.Viewing.Private.getParameterByName('urn');
     var urn = (paramUrn !== '' ? paramUrn : defaultUrn);
