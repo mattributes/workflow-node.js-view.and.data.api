@@ -46,6 +46,9 @@ $(document).ready(function () {
                 viewerConfig);
 
             viewer.load(pathInfoCollection.path3d[0].path);
+
+            im = new InjectionManager(viewer);
+            console.log(im);
         },
         onError);
 
