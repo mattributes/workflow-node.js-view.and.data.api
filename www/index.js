@@ -46,7 +46,6 @@ $(document).ready(function () {
                 $('#viewerDiv')[0],
                 viewerConfig);*/
 
-            window.viewer = viewer;
             var viewer = new Autodesk.Viewing.Private.GuiViewer3D(
                 $('#viewerDiv')[0],
                 {
@@ -57,6 +56,8 @@ $(document).ready(function () {
 
             viewer.start();
             viewer.load(pathInfoCollection.path3d[0].path);
+
+            window.viewer = viewer;
 
             im = new InjectionManager(viewer);
             console.log(im);
