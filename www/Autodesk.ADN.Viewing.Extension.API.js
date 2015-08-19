@@ -7,7 +7,7 @@ AutodeskNamespace("Autodesk.ADN.Viewing.Extension");
 
 Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
-  //alert("here2-")
+  debugger;
   Autodesk.Viewing.Extension.call(this, viewer, options);
 
   var _panel = null;
@@ -25,6 +25,8 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
     _panel = new Autodesk.ADN.Viewing.Extension.UIComponent.Panel(
       viewer.container,
       newGUID());
+
+    Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance = _panel;
 
     console.log('Autodesk.ADN.Viewing.Extension.UIComponent loaded');
 
@@ -120,7 +122,7 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     var btn = createButton(
       'Autodesk.ADN.UIComponent.Button.Show',
-      'glyphicon glyphicon-list',
+      'glyphicon glyphicon-asterisk',
       'Show Panel',
       onShowPanel);
 
@@ -191,7 +193,7 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
       this,
       parentContainer,
       baseId,
-      "UI Component Demo",
+      "Injection Points",
       {shadow: true});
 
     this.container.style.right = "0px";
@@ -202,7 +204,7 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     this.container.style.resize = "auto";
 
-    var html = [
+    /*var html = [
       '<div class="uicomponent-panel-container">',
         '<div class="uicomponent-panel-controls-container">',
           '<div>',
@@ -221,7 +223,7 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
       '</div>'
     ].join('\n');
 
-    $('#' + baseId + 'PanelContentId').html(html);
+    $('#' + baseId + 'PanelContentId').html(html);*/
 
     /////////////////////////////////////////////
     //
@@ -274,6 +276,19 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.constructor =
     Autodesk.ADN.Viewing.Extension.UIComponent.Panel;
+
+  Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.addPoint = function(point){
+    $(this.content).append($("<div></div>").append([
+      $("<label class='uicomponent-panel-label'>Temperature : </label>"),
+      $("<input class='uicomponent-panel-input temperatureInput' type='text'></input>"),
+      $("<label class='uicomponent-panel-label'>Velocity : </label>"),
+      $("<input class='uicomponent-panel-input velocityInput' type='text'></input>")
+    ]));
+  };
+
+  Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.selectPoint = function(point){
+
+  };
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.initialize = function()
   {
