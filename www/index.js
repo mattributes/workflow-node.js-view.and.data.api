@@ -20,6 +20,11 @@ $(document).ready(function () {
     app = new App();
     app.init();
 
+    $('#signIn').click(function(){ app.signIn(); });
+    $('#signIn2').click(function(){ app.signIn(); });
+    $('#signOut').click(function(){ app.signOut(); });
+    Oxygen.checkImmediate();
+
     $(window).resize(function() {
         $("#mainView").height($(window).height() * 0.75);
     });

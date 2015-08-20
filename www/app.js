@@ -3,17 +3,24 @@ var App = function() {
   this._injectionManager = null;
   this._viewerFactory = null;
   this._viewerCanvas = null;
-};
-
-App.prototype.init = function() {
-  var tokenurl = 'http://' + window.location.host + '/api/token';
-  var config = {
+  this._userInfo = null;
+  this._tokenurl = 'http://' + window.location.host + '/api/token';
+  this._config = {
     // environment : 'AutodeskProduction'
     environment : 'AutodeskStaging'
   };
+};
 
-  this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(tokenurl, config);
-  this.loadDocument(App.getAllDocumentUrns()[0]);
+App.prototype.init = function() {
+
+  if (this._userInfo !== null) {
+    this.createUserContent();
+  }
+};
+
+App.prototype.createUserContent = function() {
+    this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(this._tokenurl, this._config);
+    this.loadDocument(App.getAllDocumentUrns()[0]);
 };
 
 App.getAllDocumentUrns = function() {
@@ -89,4 +96,55 @@ App.prototype.loadDocument = function(urn) {
 App.prototype.solveCurrentModel = function() {
     var injection_pts = this.getInjectionManager().getInjectionPointsLocation();
     runSimulation(injection_pts);
+};
+
+App.prototype.onLoginCallback = function(href){
+   var params = parseQueryString(href);
+
+   if(params == null && params['openid.mode'] == null){
+      console.error('Login parameters have wrong format ' + params);
+      return;
+   }
+
+   if(params['openid.mode'] === "setup_needed"){
+      // we are not signed in
+      this.resetLoginBtn();
+      $("#userContent").css('display', 'none');
+      $("#loginRequired").css('display', 'inline');
+   }
+   else{
+       // we are signed in
+      $('#signIn').css('display', 'none');
+      $('#signOut').css('display', 'inline');
+      $('#signOut').html(params['openid.alias3.value.alias1']);
+
+      this._userInfo = {};
+      this._userInfo.name         = params['openid.alias3.value.alias1'] || '';
+      this._userInfo.avatarUrl    = params['openid.alias3.value.alias2'] || '';
+      this._userInfo.oxygenId     = params['openid.alias3.value.alias3'] || '';
+      this._userInfo.identityUrl  = params['openid.identity'] || '';
+
+      $("#userContent").css('display', 'inline');
+      $("#loginRequired").css('display', 'none');
+      this.createUserContent();
+   }
+
+   Oxygen.hide();
+};
+
+App.prototype.signIn = function(){
+   Oxygen.show();
+};
+
+App.prototype.signOut = function() {
+  Oxygen.signOut();
+  this.resetLoginBtn();
+  this._userInfo = null;
+  $("#userContent").css('display', 'none');
+  $("#loginRequired").css('display', 'inline');
+};
+
+App.prototype.resetLoginBtn = function() {
+   $('#signIn').css('display', 'inline');
+   $('#signOut').css('display', 'none');
 };

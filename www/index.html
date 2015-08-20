@@ -49,6 +49,7 @@
         <script src="/app.js"></script>
         <script type="text/jsx" src="/models.js"></script>
         <script src="/index.js"></script>
+        <script src="oxygen_plugin.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -78,26 +79,52 @@
 
         </header>
 
-        <div class="row">
-            <nav id="modelBrowser" class="placeholder col-md-12">
-                <!-- TODO: pick your model / upload a new one here? -->
-                Model selector / uploader place holder
-            </nav>
-        </div>
-
-        <div class="row">
-            <div id="commentPanel" class="col-md-2 placeholder">
-                <!-- TODO: comments/notifications here? -->
-                Comments place holder
+        <div id="userContent">
+            <div class="row">
+                <nav id="modelBrowser" class="placeholder col-md-12">
+                    <!-- TODO: pick your model / upload a new one here? -->
+                    Model selector / uploader place holder
+                </nav>
             </div>
 
-            <!-- Main content - viewer, action and results -->
-            <div id="mainView" class="col-md-10">
-                <div class="row">
-                    <!-- TODO: takes time to load the model, can we have some feedback =? -->
-                    <div id="viewerDiv"></div>
+            <div class="row">
+                <div id="commentPanel" class="col-md-2 placeholder">
+                    <!-- TODO: comments/notifications here? -->
+                    Comments place holder
+                </div>
+
+                <!-- Main content - viewer, action and results -->
+                <div id="mainView" class="col-md-10">
+                    <div class="row">
+                        <!-- TODO: takes time to load the model, can we have some feedback =? -->
+                        <div id="viewerDiv"></div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div id="loginRequired">
+            <h2>Connect your CAD models with browser based injection moulding simulation *</h2>
+
+            <div class="introBlurb">
+                <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xap1/t39.2365-6/851565_602269956474188_918638970_n.png">
+                Upload &amp; view your designs
+            </div>
+
+            <div class="introBlurb">
+                <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xaf1/t39.2365-6/851585_216271631855613_2121533625_n.png">
+                Pre pare your designs with an easy to use pre-processor
+            </div>
+
+            <div class="introBlurb">
+                <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xap1/t39.2365-6/851558_160351450817973_1678868765_n.png">
+                View the results &amp; Collaborate with your team in next to no time
+            </div>
+
+
+            <h2>Ready to start? <button id="signIn2" type="button" class="btn btn-primary right">Sign in</button></h2>
+
+            <em>* Not a real simulation, just a demo for an Autodesk Hackathon</em>
         </div>
 
         <!--footer>

@@ -32,6 +32,18 @@ footer {
   vertical-align: middle;
 }
 
+.introBlurb {
+  padding-left: 10%;
+  padding-top: 20px;
+}
+
+#loginRequired {
+}
+
+#userContent {
+  display: none;
+}
+
 #mainLogo {
   padding: 15px;
 }
