@@ -124,15 +124,21 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
       'Show Injection Points',
       onShowPanel);
 
-    parentGroup.addControl(injectionLocationBtn);
-
     var solveBtn = createButton(
       'Autodesk.ADN.UIComponent.Button.ShowSolve',
       'solveIcon',
       'Solve',
       onSolve);
 
+    var resultsBtn = createButton(
+      'Autodesk.ADN.UIComponent.Button.ShowResults',
+      'resultsIcon',
+      'Show/hide results',
+      onShowHideResults);
+
+    parentGroup.addControl(injectionLocationBtn);
     parentGroup.addControl(solveBtn);
+    parentGroup.addControl(resultsBtn);
   }
 
   /////////////////////////////////////////////
@@ -150,6 +156,14 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   /////////////////////////////////////////////
   function onSolve() {
     window.app.solveCurrentModel();
+  }
+
+  /////////////////////////////////////////////
+  //
+  //
+  /////////////////////////////////////////////
+  function onShowHideResults() {
+    alert('will show/hide results when function to do so is ready');
   }
 
   /////////////////////////////////////////////
@@ -426,7 +440,18 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
       'height: 42px;',
       'margin-top: -6px;',
       'margin-left: -6px;',
+    '}',
+
+    '.resultsIcon {',
+      'background-image:url(/images/results.png);',
+      'display: block;',
+      'width: 42px;',
+      'height: 42px;',
+      'margin-top: -6px;',
+      'margin-left: -6px;',
     '}'
+
+    
 
   ].join('\n');
 

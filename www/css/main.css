@@ -131,7 +131,3 @@ footer {
 #viewerDiv.injectCursor canvas{
   cursor: url(/images/injectIcon.png) 2 40, default !important;
 }
-
-#viewerDiv.solveIcon canvas{
-  cursor: url(/images/solve-cloud.png) 2 40, default !important;
-}
