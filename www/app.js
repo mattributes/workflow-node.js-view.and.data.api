@@ -89,17 +89,4 @@ App.prototype.loadDocument = function(urn) {
 App.prototype.solveCurrentModel = function() {
     var injection_pts = this.getInjectionManager().getInjectionPointsLocation();
     runSimulation(injection_pts);
-    this.showResultsTools(true);
-};
-
-App.prototype.showResultsTools = function(show) {
-    // TODO: Dylan is reworking this remorking
-    // if (show) {
-    //     $('#resultTools').show();
-    //     $('#noResults').hide();
-    // }
-    // else {
-    //     $('#resultTools').hide();
-    //     $('#noResults').show();
-    // }
 };
