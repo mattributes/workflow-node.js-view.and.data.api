@@ -300,6 +300,14 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
     velocityInput.on("change", function(){
       point.setVelocity(velocityInput.val());
     });
+
+    var self = this;
+
+    pointContainer.on("click", function(){
+      console.log($(self.content));
+      $(self.content).find(".pointContainer").removeClass("active");
+      pointContainer.addClass("active");
+    })
   };
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.initialize = function()
@@ -326,6 +334,10 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     '.pointContainer{',
       'border: solid 2px #FFFFFF;',
+    '}',
+
+    '.pointContainer.active{',
+      'border: solid 2px #FF0000;',
     '}',
 
     'div.uicomponent-panel-content {',
