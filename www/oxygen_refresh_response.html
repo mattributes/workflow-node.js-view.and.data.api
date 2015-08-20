@@ -5,16 +5,19 @@
   <title></title>
 
   <script type="text/javascript">
+
+    // <![CDATA[
     if (window.opener) {
-      window.opener.app.onLoginCallback(window.location.href);
-    }
-    else {
+      window.opener.Oxygen.processOpenIDRefreshResponse(window.location.href);
+    } else {
       try {
-        parent.app.onLoginCallback(window.location.href);
+        parent.Oxygen.processOpenIDRefreshResponse(window.location.href);
       } catch (e) {
-        window.top.app.onLoginCallback(window.location.href);
+        window.top.Oxygen.processOpenIDRefreshResponse(window.location.href);
       }
     }
+  // ]]>
+
   </script>
 </head>
 

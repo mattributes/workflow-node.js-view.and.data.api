@@ -150,3 +150,10 @@ App.prototype.resetLoginBtn = function() {
    $('#signIn').css('display', 'inline');
    $('#signOut').css('display', 'none');
 };
+
+App.prototype.showResults = function(flag) {
+  showSimulationResults(flag);
+}
+
+
+

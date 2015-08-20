@@ -1,3 +1,6 @@
+var heatmap_mesh = null;
+var heatmap_mesh_name = "HeatmapMesh";
+
 var runSimulation = function(inj_pts)
 {
 	var modelData = configureSimulation(inj_pts);
@@ -55,6 +58,15 @@ var configureSimulation = function(inj_pts)
 	}
 
 	return res;
+}
+
+var showSimulationResults = function(flag)
+{
+	var mesh = getObjectByName(heatmap_mesh_name);
+	if(mesh){
+		mesh.visible = flag;
+		app.getViewerCanvas().impl.invalidate(true);
+	}
 }
 
 function pointToPointDistance3D(p, q)
@@ -116,9 +128,6 @@ function simulatePointTime(p, inj_pts)
 	return res;
 }	
 
-// var heatmap_material = null;
-// var heatmap_mesh = null;
-
 var numColorBins = 11;
 var colorScale = ['rgb(165,0,38)','rgb(215,48,39)','rgb(244,109,67)','rgb(253,174,97)','rgb(254,224,144)','rgb(255,255,191)','rgb(224,243,248)','rgb(171,217,233)','rgb(116,173,209)','rgb(69,117,180)','rgb(49,54,149)'];
 
@@ -166,7 +175,7 @@ function visualizeSimulationResults(pts, faces, res)
 	var heatmap_material = new THREE.MeshBasicMaterial(
 		{
 			color: 0xffffff,
-      		opacity: 0.0,
+      		opacity: 0.5,
       		shading: THREE.FlatShading,
       		side: THREE.DoubleSide,
       		vertexColors: THREE.VertexColors,
@@ -180,19 +189,33 @@ function visualizeSimulationResults(pts, faces, res)
 
 	var heatmap_geom = createHeatmapGeometry(pts, faces, res);
 
-	var heatmap_mesh =
+	removeObjectByName(heatmap_mesh_name);
+
+	heatmap_mesh =
 		new THREE.Mesh(
             heatmap_geom,
             heatmap_material
         );
     heatmap_mesh.position.set(0, 0, 0);
+    heatmap_mesh.name = heatmap_mesh_name;
 	
 	//adding to LMV
-	
 	viewerCanvas.impl.scene.add(heatmap_mesh);   
 	viewerCanvas.impl.invalidate(true);
 }
 
+function removeObjectByName(name)
+{
+	var mesh = getObjectByName(name);
+	if(mesh){
+		app.getViewerCanvas().impl.scene.remove(mesh);
+	}
+}
+
+function getObjectByName(name)
+{
+	return app.getViewerCanvas().impl.scene.getObjectByName(name);
+}
 
 
 

@@ -12,6 +12,8 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
   var isOpen = false;
 
+  var resultsVisible = true;
+
   /////////////////////////////////////////////
   //
   //
@@ -167,7 +169,8 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   //
   /////////////////////////////////////////////
   function onShowHideResults() {
-    alert('will show/hide results when function to do so is ready');
+    resultsVisible = !resultsVisible;
+    window.app.showResults(resultsVisible);
   }
 
   /////////////////////////////////////////////
