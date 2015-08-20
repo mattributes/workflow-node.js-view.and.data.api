@@ -15,17 +15,14 @@ var InjectionManager = function(viewer){
 
 	var self = this;	
 	$("#viewerDiv").click(function(e) {
-		console.log(e);
 		var x = e.offsetX/viewer.container.offsetWidth;
 		var y = e.offsetY/viewer.container.offsetHeight;
 		var location = viewer.utilities.getHitPoint(x, y);
 		if (!location) {
-			// alert('bad');
 			console.log('bad');
 			return;
 		}
 
-		// alert('good');
 		console.log('good');
 		self.add(location);
 	});
