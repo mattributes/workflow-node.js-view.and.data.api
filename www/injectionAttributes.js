@@ -54,9 +54,15 @@ InjectionPoint.prototype.deselect = function(){
   app.getViewerCanvas().impl.invalidate(true);
 }
 
+InjectionPoint.prototype.remove = function(){
+  app.getViewerCanvas().impl.scene.remove(this.sphere);
+}
+
 //Injection Manager
 //keeps track of all injection points
-var InjectionManager = function(viewer){
+var InjectionManager = function(){
+  var viewer = app.getViewerCanvas();
+
   viewer.addEventListener("selection", this.handleSelection.bind(this));
 
   var self = this;
@@ -88,6 +94,14 @@ var InjectionManager = function(viewer){
   this.injectionPoints = [];
 }
 
+InjectionManager.instance = function(){
+  if (!this._instance){
+      this._instance = new InjectionManager();
+  }
+
+  return this._instance;
+}
+
 InjectionManager.prototype.handleSelection = function(e){
   // alert("clicked on fragId " + e.fragIdsArray[0]);
   // this.add(e.fragIdsArray[0]);
@@ -106,6 +120,15 @@ InjectionManager.prototype.deselectAllPoints = function() {
   _.each(this.injectionPoints, function(p){
     p.deselect();
   });
+};
+
+InjectionManager.prototype.reset = function() {
+  _.each(this.injectionPoints, function(p){
+    p.remove();
+  });
+
+  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.removeAll();
+  this.injectionPoints = [];
 };
 
 InjectionManager.prototype.getInjectionPointsLocation = function()

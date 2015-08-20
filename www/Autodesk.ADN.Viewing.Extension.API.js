@@ -319,6 +319,10 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
     $(this.content).find(".pointContainer").removeClass("active");
   }
 
+  Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.removeAll = function(){
+    $(this.content).empty();
+  }
+
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.initialize = function()
   {
     // Override DockingPanel initialize() to:
