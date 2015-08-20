@@ -59,30 +59,35 @@ InjectionPoint.prototype.remove = function(){
 var InjectionManager = function(){
   var viewer = app.getViewerCanvas();
 
-  var self = this;
-  $("#viewerDiv").click(function(e) {
+  var hitTestWithEvent = function(e, callback) {
     var x = e.offsetX/viewer.container.offsetWidth;
     var y = e.offsetY/viewer.container.offsetHeight;
     var location = viewer.utilities.getHitPoint(x, y);
-    if (!location) {
-      console.log('bad');
-      return;
-    }
+    callback(location);
+  };
 
-    console.log('good');
-    self.add(location, viewer);
+  var self = this;
+  $("#viewerDiv").click(function(e) {
+    hitTestWithEvent(e, function(location) {
+      if (!location) {
+        console.log('bad');
+        return;
+      }
+      console.log('good');
+      self.add(location, viewer);
+    });
   });
 
   //updates cursor when over model
   $("#viewerDiv").on("mousemove", function(e) {
-    var x = e.offsetX/viewer.container.offsetWidth;
-    var y = e.offsetY/viewer.container.offsetHeight;
-    var location = viewer.utilities.getHitPoint(x, y);
-    if (!location) {
-      $(this).removeClass("injectCursor");
-    }else{
-      $(this).addClass("injectCursor");
-    }
+    var $that = $(this);
+    hitTestWithEvent(e, function(location) {
+      if (!location) {
+        $that.removeClass("injectCursor");
+        return;
+      }
+      $that.addClass("injectCursor");
+    });
   });
 
   this.injectionPoints = [];
@@ -90,9 +95,8 @@ var InjectionManager = function(){
 
 InjectionManager.instance = function(){
   if (!this._instance){
-      this._instance = new InjectionManager();
+    this._instance = new InjectionManager();
   }
-
   return this._instance;
 }
 
