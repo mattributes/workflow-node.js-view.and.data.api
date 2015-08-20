@@ -100,7 +100,7 @@ InjectionManager.getOrCreateInstance = function(){
   if (!this._instance){
     this._instance = new InjectionManager();
   }
-  this._instance._reset();
+  this._instance.reset();
   return this._instance;
 }
 
@@ -122,11 +122,12 @@ InjectionManager.prototype.deselectAllPoints = function() {
   });
 };
 
-InjectionManager.prototype._reset = function() {
-  var self = this;
+InjectionManager.prototype.reset = function() {
   _.each(this.injectionPoints, function(p){
-    self.removePoint(p);
+    p.delete();
   });
+
+  this.injectionPoints = [];
 };
 
 InjectionManager.prototype.removePoint = function(point) {
