@@ -31,7 +31,7 @@ App.prototype.init = function() {
 
   this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(tokenurl, config);
   this.loadDocument(this._documentUrns[0]);
-  // generateModelsDom(this.getAllDocumentUrns());
+  // window.generateModelsDom(this.getAllDocumentUrns());
 };
 
 App.prototype.getAllDocumentUrns = function() {
@@ -40,6 +40,10 @@ App.prototype.getAllDocumentUrns = function() {
 
 App.prototype.getCurrentDocumentUrn = function() {
   return this._currentDocumentUrn;
+};
+
+App.prototype.getInjectionManager = function() {
+  return this._injectionManager;
 };
 
 App.prototype.initViewerCanvas = function() {
