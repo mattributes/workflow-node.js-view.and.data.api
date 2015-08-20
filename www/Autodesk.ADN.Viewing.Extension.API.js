@@ -321,7 +321,8 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
     //TODO hacky binding of ui to the point model
     point.uiContainer = pointContainer;
 
-    $(this.content).append(pointContainer.append([
+
+    $("#AllPointsContainer").append(pointContainer.append([
       $("<div class='inputContainer'></div>").append([
         $("<label class='uicomponent-panel-label'>Temperature : </label>"),
         tempInput
@@ -363,7 +364,7 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   }
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.removeAll = function(){
-    $(this.content).empty();
+    $("#AllPointsContainer").empty();
   }
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.initialize = function()
@@ -380,6 +381,9 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     this.container.appendChild(this.title);
     this.title.appendChild(this.closer);
+
+    $(this.content).append($("<div id='AllPointsContainer'></div>)"));
+
     this.container.appendChild(this.content);
 
     this.initializeMoveHandlers(this.title);
