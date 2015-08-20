@@ -23,7 +23,6 @@ var App = function() {
 };
 
 App.prototype.init = function() {
-  debugger;
   var tokenurl = 'http://' + window.location.host + '/api/token';
   var config = {
     // environment : 'AutodeskProduction'
@@ -32,7 +31,7 @@ App.prototype.init = function() {
 
   this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(tokenurl, config);
   this.loadDocument(this._documentUrns[0]);
-  //Models.setProps({models: this.getAllDocumentUrns()});
+  // generateModelsDom(this.getAllDocumentUrns());
 };
 
 App.prototype.getAllDocumentUrns = function() {
