@@ -70,10 +70,8 @@ var InjectionManager = function(){
   $("#viewerDiv").click(function(e) {
     hitTestWithEvent(e, function(location) {
       if (!location) {
-        console.log('bad');
         return;
       }
-      console.log('good');
       self.add(location, viewer);
     });
   });
