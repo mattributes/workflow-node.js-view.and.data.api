@@ -31,12 +31,12 @@ App.prototype.init = function() {
   };
 
   this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(tokenurl, config);
-  // this.loadDocument(this._documentUrns[0]);
+  this.loadDocument(this._documentUrns[0]);
   //Models.setProps({models: this.getAllDocumentUrns()});
 };
 
 App.prototype.getAllDocumentUrns = function() {
-  return this._currentDocumentUrn;
+  return this._documentUrns;
 };
 
 App.prototype.getCurrentDocumentUrn = function() {
