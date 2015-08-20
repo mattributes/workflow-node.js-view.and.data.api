@@ -73,6 +73,18 @@ var InjectionManager = function(viewer){
     self.add(location, viewer);
   });
 
+  //updates cursor when over model
+  $("#viewerDiv").on("mousemove", function(e) {
+    var x = e.offsetX/viewer.container.offsetWidth;
+    var y = e.offsetY/viewer.container.offsetHeight;
+    var location = viewer.utilities.getHitPoint(x, y);
+    if (!location) {
+      $(this).removeClass("injectCursor");
+    }else{
+      $(this).addClass("injectCursor");
+    }
+  });
+
   this.injectionPoints = [];
 }
 
