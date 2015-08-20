@@ -120,8 +120,8 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     var btn = createButton(
       'Autodesk.ADN.UIComponent.Button.Show',
-      'glyphicon glyphicon-asterisk',
-      'Show Panel',
+      'injectIcon',
+      'Show Injection Points',
       onShowPanel);
 
     parentGroup.addControl(btn);
@@ -324,9 +324,9 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
   var css = [
 
-    /*.pointContainer{
-      border: solid 1px
-    }*/
+    '.pointContainer{',
+      'border: solid 2px #FFFFFF;',
+    '}',
 
     'div.uicomponent-panel-content {',
       'height: calc(100% - 5px);',
@@ -367,6 +367,15 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
       'height: 30px;',
       'width: 150px;',
       'border-radius: 5px;',
+    '}',
+
+    '.injectIcon {',
+      'background-image:url(/images/injectIcon.png);',
+      'display: block;',
+      'width: 42px;',
+      'height: 42px;',
+      'margin-top: -6px;',
+      'margin-left: -6px;',
     '}'
 
   ].join('\n');
