@@ -1,12 +1,12 @@
 var Model = React.createClass({
   onClick: function() {
-    loadDocument(this.props.urn);
+    app.loadDocument(this.props.urn);
   },
 
   render: function() {
     var src =  'https://developer-stg.api.autodesk.com' + '/viewingservice/v1/thumbnails/' + this.props.urn + '?width=130&height=130';
     var classname = 'model';
-    if (currentDocumentUrn === this.props.urn) {
+    if (app.getCurrentDocumentUrn() === this.props.urn) {
       classname += ' model_selected';
     }
     return (

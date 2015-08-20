@@ -16,59 +16,15 @@
 // UNINTERRUPTED OR ERROR FREE.
 /////////////////////////////////////////////////////////////////////////////////
 
-// Example part (MF card holder, "shell_1_of_mfx_card_holder.stl")
-var currentDocumentUrn = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs';
-
 $(document).ready(function () {
-    var tokenurl = 'http://' + window.location.host + '/api/token';
-    var config = {
-        //environment : 'AutodeskProduction'
-        environment : 'AutodeskStaging'
-    };
-
-    // Instantiate viewer factory
-    var viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(
-        tokenurl,
-        config);
-
-    var viewerInitFunc = _.once(function() {
-        /*var viewerConfig = {
-            viewerType: 'GuiViewer3D',
-            extensions: ['ADN Simple Extension']
-        };
-
-        var viewer = viewerFactory.createViewer(
-        $('#viewerDiv')[0],
-        viewerConfig);*/
-
-        var viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerDiv')[0], {
-            viewerType: 'GuiViewer3D',
-            extensions: ['Autodesk.ADN.Viewing.Extension.UIComponent']
-        });
-        viewer.start();
-        window.viewer = viewer;
-        return viewer;
-    });
-
-    var urn = currentDocumentUrn;
-    viewerFactory.getViewablePath (urn,
-        function(pathInfoCollection) {
-            var viewer = viewerInitFunc();
-            viewer.load(pathInfoCollection.path3d[0].path);
-            im = new InjectionManager(viewer);
-            console.log(im);
-        },
-        onError);
+    app = new App();
+    app.init();
 
     $('#solve').click(function() {
         runSimulation();
         showResultsTools(true);
     });
 });
-
-function onError(error) {
-    console.log('Error: ' + error);
-};
 
 function showResultsTools(show) {
     if (show) {
