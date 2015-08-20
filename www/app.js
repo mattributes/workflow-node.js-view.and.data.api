@@ -14,7 +14,6 @@ App.prototype.init = function() {
 
   this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(tokenurl, config);
   this.loadDocument(App.getAllDocumentUrns()[0]);
-  // window.generateModelsDom(this.getAllDocumentUrns());
 };
 
 App.getAllDocumentUrns = function() {
