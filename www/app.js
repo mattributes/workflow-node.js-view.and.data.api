@@ -43,17 +43,11 @@ App.prototype.getInjectionManager = function() {
   return this._injectionManager;
 };
 
+
+// TODO: Move this function to App.prototype.init().
 App.prototype.initViewerCanvas = function() {
-  // TODO: Move this function to App.prototype.init().
-
-  // var viewerConfig = {
-  //   viewerType: 'GuiViewer3D',
-  //   extensions: ['ADN Simple Extension']
-  // };
-
-  // var viewer = viewerFactory.createViewer(
-  //   $('#viewerDiv')[0],
-  //   viewerConfig);
+  // var viewerConfig = {viewerType: 'GuiViewer3D', extensions: ['ADN Simple Extension']};
+  // var viewer = viewerFactory.createViewer($('#viewerDiv')[0], viewerConfig);
 
   var viewerCanvas = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerDiv')[0], {
     viewerType: 'GuiViewer3D',
