@@ -17,7 +17,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 // Example part (MF card holder, "shell_1_of_mfx_card_holder.stl")
-var defaultUrn = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs';
+var currentDocumentUrn = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs';
 
 $(document).ready(function () {
     var tokenurl = 'http://' + window.location.host + '/api/token';
@@ -31,34 +31,27 @@ $(document).ready(function () {
         tokenurl,
         config);
 
-    // Allows different urn to be passed as url parameter
-    var paramUrn = Autodesk.Viewing.Private.getParameterByName('urn');
-    var urn = (paramUrn !== '' ? paramUrn : defaultUrn);
+    setTimeout(function() {
+        /*var viewerConfig = {
+            viewerType: 'GuiViewer3D',
+            extensions: ['ADN Simple Extension']
+        };
 
+        var viewer = viewerFactory.createViewer(
+        $('#viewerDiv')[0],
+        viewerConfig);*/
+
+        var viewer = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerDiv')[0], {
+            viewerType: 'GuiViewer3D',
+            extensions: ['Autodesk.ADN.Viewing.Extension.UIComponent']
+        });
+        viewer.start();
+        window.viewer = viewer;}, 1000);
+
+    var urn = currentDocumentUrn;
     viewerFactory.getViewablePath (urn,
         function(pathInfoCollection) {
-            /*var viewerConfig = {
-                viewerType: 'GuiViewer3D',
-                extensions: ['ADN Simple Extension']
-            };
-
-            var viewer = viewerFactory.createViewer(
-                $('#viewerDiv')[0],
-                viewerConfig);*/
-
-            var viewer = new Autodesk.Viewing.Private.GuiViewer3D(
-                $('#viewerDiv')[0],
-                {
-                    viewerType: 'GuiViewer3D',
-                    extensions: ['Autodesk.ADN.Viewing.Extension.UIComponent']
-                }
-            );
-
-            viewer.start();
             viewer.load(pathInfoCollection.path3d[0].path);
-
-            window.viewer = viewer;
-
             im = new InjectionManager(viewer);
             console.log(im);
         },

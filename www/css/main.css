@@ -52,7 +52,7 @@ footer {
 #modelBrowser {
    position: relative;
    left: 0px;
-   height: 8%;
+   height: 130;
    width: 100%;
 }
 
@@ -120,5 +120,17 @@ footer {
   border-radius: 5px;
   padding: 5px;
   margin: 5px;
+}
+
+.model {
+  height: 130;
+  width: 130;
+  border: 1px solid black;
+  border-radius: 7px;
+  margin: 2px;
+}
+
+.model_selected {
+  border: 1px solid red;
 }
 
