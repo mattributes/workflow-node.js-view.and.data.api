@@ -55,7 +55,6 @@ App.prototype.initViewerCanvas = function() {
   });
 
   viewerCanvas.start();
-  window.viewer = viewerCanvas;
   this._viewerCanvas = viewerCanvas;
   return viewerCanvas;
 };
@@ -74,7 +73,7 @@ App.prototype.loadDocument = function(urn) {
     var viewerCanvas = self.getViewerCanvas();
     viewerCanvas.impl.unloadCurrentModel();
     viewerCanvas.load(pathInfoCollection.path3d[0].path);
-    self._injectionManager = new InjectionManager(viewer);
+    self._injectionManager = new InjectionManager(viewerCanvas);
     self._currentDocumentUrn = urn;
   }, function (error) {
     self._currentDocumentUrn = "";
