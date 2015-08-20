@@ -24,7 +24,7 @@ var configureSimulation = function(inj_pts)
 	for(var i=0; i<coords.length; i=i+stride, pt_count++){
 		res.pts.push({
 			id: pt_count,
-			xyz: [coords[i], coords[i+1], coords[i+2]]
+			xyz: [.11*coords[i], .11*coords[i+1], .11*coords[i+2]]
 		})
 	}
 
@@ -83,15 +83,26 @@ function getClosestInjectionPoint(p, inj_p)
 
 function runSimulationInternal(pts, inj_pts)
 {
-	var simulationResults = [];
+	var simulationResults = {
+		min: Infinity,
+		max: -Infinity,
+		array: []
+	};
 
 	for(var i=0; i<pts.length; i++){
 		var res = simulatePointTime(pts[i], inj_pts);
-		simulationResults.push({
+		simulationResults.array.push({
 			id: i,
 			result: res
 		});
 	}
+
+	for(var i=0; i<simulationResults.array.length; i++){
+		var val = simulationResults.array[i].result;
+		if(val<simulationResults.min) simulationResults.min = val;
+		if(val>simulationResults.max) simulationResults.max = val;
+	}
+
 	return simulationResults;
 }
 
@@ -103,14 +114,25 @@ function simulatePointTime(p, inj_pts)
 		res = pointToPointDistance3D(p.xyz, inj_pts[closest_inj_pt_id].xyz);
 	}
 	return res;
-}
+}	
 
 // var heatmap_material = null;
 // var heatmap_mesh = null;
 
+var numColorBins = 11;
+var colorScale = ['rgb(165,0,38)','rgb(215,48,39)','rgb(244,109,67)','rgb(253,174,97)','rgb(254,224,144)','rgb(255,255,191)','rgb(224,243,248)','rgb(171,217,233)','rgb(116,173,209)','rgb(69,117,180)','rgb(49,54,149)'];
+
+function colorFromValue(val, min, max)
+{
+	var v = (val-min)/(max-min);
+	var res = new THREE.Color(colorScale[Math.floor(v*numColorBins)]);
+	return res;
+}
 
 function createHeatmapGeometry(pts, faces, res)
 {
+	console.log("min: ", res.min);
+	console.log("max: ", res.max);
 	//var geom = new THREE.SphereGeometry(10, 20);
 	var geom = new THREE.Geometry();
 
@@ -123,15 +145,13 @@ function createHeatmapGeometry(pts, faces, res)
 		var face = faces[i].idxs;
 		geom.faces.push( new THREE.Face3( face[0], face[1], face[2],
 											new THREE.Vector3( 0, 0, 1 ),
-											new THREE.Color(
-												Math.random(),
-												Math.random(),
-												Math.random())
-		 ) );
-	}
-
-	for(var i=0; i<res.length; i++){
-		geom.colors.push( new THREE.Color(0,1,0) );
+											[
+												colorFromValue(res.array[face[0]].result, res.min, res.max),
+												colorFromValue(res.array[face[1]].result, res.min, res.max),
+												colorFromValue(res.array[face[2]].result, res.min, res.max)
+											]
+										)
+		);
 	}
 
 	geom.computeFaceNormals();

@@ -1,8 +1,28 @@
+#AllPointsContainer{
+  height: 90%;
+  overflow-y: auto;
+  overflow-x: auto;
+  overflow-x: hidden;
+}
+
 .pointContainer{
   font-size:12px;
   width:366px;
   padding:2px 5px;
   position:relative;
+}
+
+.pointContainer .inputContainer{
+  margin-bottom:3px;
+  position:relative;
+}
+
+.pointContainer .inputContainer label{
+  position:absolute;
+}
+
+.pointContainer .inputContainer input{
+  margin-left:100px;
 }
 
 .pointContainer .inputContainer{
