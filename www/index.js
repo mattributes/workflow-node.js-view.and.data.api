@@ -64,10 +64,25 @@ $(document).ready(function () {
         },
         onError);
 
+    $('#solve').click(function() {
+        runSimulation();
+        showResultsTools(true);
+    });
 });
 
 function onError(error) {
     console.log('Error: ' + error);
+};
+
+function showResultsTools(show) {
+    if (show) {
+        $('#resultTools').show();
+        $('#noResults').hide();
+    }
+    else {
+        $('#resultTools').hide();
+        $('#noResults').show();
+    }
 };
 
 // The following code does not rely on Autodesk.ADN.Toolkit.Viewer.AdnViewerManager
