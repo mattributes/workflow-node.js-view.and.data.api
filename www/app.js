@@ -1,8 +1,24 @@
 var App = function() {
-  this._documentUrns = [
-    // Currently these are duplicates.
-    // Dylan will upload some mold flow models and update the array here.
+  this._currentDocumentUrn = "";
+  this._injectionManager = null;
+  this._viewerFactory = null;
+  this._viewerCanvas = null;
+};
 
+App.prototype.init = function() {
+  var tokenurl = 'http://' + window.location.host + '/api/token';
+  var config = {
+    // environment : 'AutodeskProduction'
+    environment : 'AutodeskStaging'
+  };
+
+  this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(tokenurl, config);
+  this.loadDocument(App.getAllDocumentUrns()[0]);
+  // window.generateModelsDom(this.getAllDocumentUrns());
+};
+
+App.getAllDocumentUrns = function() {
+  return [
     // plate20x20x2-5.STL
     'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTIwLTE2LTQ2LTA1LXR1dnI2cGVzZjd3YWtncG13dXF0aHZ3dXEzc3IvcGxhdGUyMHgyMHgyLTUuU1RM',
 
@@ -18,27 +34,6 @@ var App = function() {
     // // Name/description of model
     // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs'
   ];
-
-  this._currentDocumentUrn = "";
-  this._injectionManager = null;
-  this._viewerFactory = null;
-  this._viewerCanvas = null;
-};
-
-App.prototype.init = function() {
-  var tokenurl = 'http://' + window.location.host + '/api/token';
-  var config = {
-    // environment : 'AutodeskProduction'
-    environment : 'AutodeskStaging'
-  };
-
-  this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(tokenurl, config);
-  this.loadDocument(this._documentUrns[0]);
-  // window.generateModelsDom(this.getAllDocumentUrns());
-};
-
-App.prototype.getAllDocumentUrns = function() {
-  return this._documentUrns;
 };
 
 App.prototype.getCurrentDocumentUrn = function() {
