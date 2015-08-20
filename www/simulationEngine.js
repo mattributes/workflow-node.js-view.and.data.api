@@ -108,6 +108,13 @@ function simulatePointTime(p, inj_pts)
 // var heatmap_material = null;
 // var heatmap_mesh = null;
 
+function colorFromValue(val, min, max)
+{
+	var v = (val-min)/(max-min);
+	var res = new THREE.Color(1,v,1);
+	return res;
+}
+
 
 function createHeatmapGeometry(pts, faces, res)
 {
@@ -123,15 +130,13 @@ function createHeatmapGeometry(pts, faces, res)
 		var face = faces[i].idxs;
 		geom.faces.push( new THREE.Face3( face[0], face[1], face[2],
 											new THREE.Vector3( 0, 0, 1 ),
-											new THREE.Color(
-												Math.random(),
-												Math.random(),
-												Math.random())
-		 ) );
-	}
-
-	for(var i=0; i<res.length; i++){
-		geom.colors.push( new THREE.Color(0,1,0) );
+											[
+												colorFromValue(res[face[0]].result, 0, 40),
+												colorFromValue(res[face[1]].result, 0, 40),
+												colorFromValue(res[face[2]].result, 0, 40)
+											]
+										)
+		);
 	}
 
 	geom.computeFaceNormals();
