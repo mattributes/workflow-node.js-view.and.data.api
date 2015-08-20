@@ -6,9 +6,11 @@
 }
 
 .pointContainer{
+  border-radius:10px;
   font-size:12px;
-  width:366px;
-  padding:2px 5px;
+  width:345px;
+  margin:2px 5px;
+  padding:5px 5px 0px 5px;
   position:relative;
 }
 
@@ -18,11 +20,17 @@
 }
 
 .pointContainer .inputContainer label{
+  margin-top: 4px;
   position:absolute;
 }
 
 .pointContainer .inputContainer input{
   margin-left:100px;
+}
+
+.pointContainer .inputContainer .subLabel{
+  margin-left:5px;
+  color:white;
 }
 
 .pointContainer .inputContainer{
@@ -32,9 +40,9 @@
 .pointContainer .remove{
   color: white;
   position: absolute;
-  right: 15px;
+  right: 20px;
   font-size: 24px;
-  top: 12px;
+  top: 20px;
 }
 
 .pointContainer .remove:hover{
