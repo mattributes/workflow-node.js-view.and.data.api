@@ -31,7 +31,7 @@ $(document).ready(function () {
         tokenurl,
         config);
 
-    setTimeout(function() {
+    var viewerInitFunc = _.once(function() {
         /*var viewerConfig = {
             viewerType: 'GuiViewer3D',
             extensions: ['ADN Simple Extension']
@@ -46,11 +46,14 @@ $(document).ready(function () {
             extensions: ['Autodesk.ADN.Viewing.Extension.UIComponent']
         });
         viewer.start();
-        window.viewer = viewer;}, 1000);
+        window.viewer = viewer;
+        return viewer;
+    });
 
     var urn = currentDocumentUrn;
     viewerFactory.getViewablePath (urn,
         function(pathInfoCollection) {
+            var viewer = viewerInitFunc();
             viewer.load(pathInfoCollection.path3d[0].path);
             im = new InjectionManager(viewer);
             console.log(im);
