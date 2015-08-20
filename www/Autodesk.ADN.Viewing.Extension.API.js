@@ -277,10 +277,12 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.addPoint = function(point){
 
+    this.deselectAll();
+
     var tempInput = $("<input class='uicomponent-panel-input temperatureInput' type='text'></input>").val(point.temperature);
     var velocityInput = $("<input class='uicomponent-panel-input velocityInput' type='text'></input>").val(point.velocity);
 
-    var pointContainer = $("<div class='pointContainer'></div>");
+    var pointContainer = $("<div class='pointContainer active'></div>");
 
     $(this.content).append(pointContainer.append([
       $("<div></div>").append([
@@ -300,7 +302,22 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
     velocityInput.on("change", function(){
       point.setVelocity(velocityInput.val());
     });
+
+    var self = this;
+
+    pointContainer.on("click", function(){
+      self.deselectAll();
+      pointContainer.addClass("active");
+
+      point.select();
+    })
+
+    this.setVisible(true);
   };
+
+  Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.deselectAll = function(){
+    $(this.content).find(".pointContainer").removeClass("active");
+  }
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.initialize = function()
   {
@@ -326,6 +343,10 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     '.pointContainer{',
       'border: solid 2px #FFFFFF;',
+    '}',
+
+    '.pointContainer.active{',
+      'border: solid 2px #FF0000;',
     '}',
 
     'div.uicomponent-panel-content {',

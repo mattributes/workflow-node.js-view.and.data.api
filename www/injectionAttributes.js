@@ -2,6 +2,7 @@ var InjectionPoint = function(obj){
   this.location = obj.location;
   this.temperature = 0;
   this.velocity = 0;
+  this.sphere = null;
 };
 
 InjectionPoint.prototype._getBoundingBoxDiagonal = function(viewer) {
@@ -21,10 +22,10 @@ InjectionPoint.prototype.createGeometry = function(viewer) {
   viewer.impl.matman().addMaterial('MaterialForInjectionPoint', material, true);
 
   var sphereRadius = this._getBoundingBoxDiagonal(viewer) / 50;
-  var sphere = new THREE.Mesh(new THREE.SphereGeometry(sphereRadius, 20), material);
-  sphere.position.set(this.location.x, this.location.y, this.location.z);
+  this.sphere = new THREE.Mesh(new THREE.SphereGeometry(sphereRadius, 20), material);
+  this.sphere.position.set(this.location.x, this.location.y, this.location.z);
 
-  viewer.impl.scene.add(sphere);
+  viewer.impl.scene.add(this.sphere);
   viewer.impl.invalidate(true);
 };
 
@@ -34,12 +35,23 @@ InjectionPoint.prototype.attachToGeometry = function(){
 
 InjectionPoint.prototype.setTemperature = function(val){
   this.tempereature = val;
-  //console.log(this);
 }
 
 InjectionPoint.prototype.setVelocity = function(val){
   this.velocity = val;
-  //console.log(this);
+}
+
+InjectionPoint.prototype.select = function(){
+  //TODO hacking - replace with method to get injection manager
+  //when selecting a point, deselect all other points.
+  app._injectionManager.deselectAllPoints();
+  this.sphere.material.color.setHex( 0xff0000 );
+  app.getViewerCanvas().impl.invalidate(true);
+}
+
+InjectionPoint.prototype.deselect = function(){
+  this.sphere.material.color.setHex( 0xffffff );
+  app.getViewerCanvas().impl.invalidate(true);
 }
 
 //Injection Manager
@@ -71,8 +83,24 @@ InjectionManager.prototype.handleSelection = function(e){
 };
 
 InjectionManager.prototype.add = function(location, viewer) {
+  this.deselectAllPoints();
   var injectionPoint = new InjectionPoint({location: location});
   injectionPoint.createGeometry(viewer);
   Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.addPoint(injectionPoint);
   this.injectionPoints.push(injectionPoint);
+}
+
+InjectionManager.prototype.deselectAllPoints = function() {
+  _.each(this.injectionPoints, function(p){
+    p.deselect();
+  });
+};
+
+InjectionManager.prototype.getInjectionPointsLocation = function()
+{
+  var res = [];
+  for(var i=0; i<this.injectionPoints.length; i++){
+    res.push( this.injectionPoints[i].location );
+  } 
+  return res;
 }

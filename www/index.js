@@ -21,7 +21,9 @@ $(document).ready(function () {
     app.init();
 
     $('#solve').click(function() {
-        runSimulation();
+        var injection_pts = 
+            app.getInjectionManager().getInjectionPointsLocation();
+        runSimulation(injection_pts);
         showResultsTools(true);
     });
 });
