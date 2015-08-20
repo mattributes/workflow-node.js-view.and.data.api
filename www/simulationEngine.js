@@ -112,7 +112,11 @@ function createHeatmapGeometry(pts, faces, res)
 		var face = faces[i].idxs;
 		geom.faces.push( new THREE.Face3( face[0], face[1], face[2] ) );
 	}
-debugger
+
+	for(var i=0; i<res.length; i++){
+		geom.colors.push( new THREE.Color(1,1,0) );
+	}
+
 	return geom;
 }
 
@@ -122,11 +126,24 @@ function visualizeSimulationResults(pts, faces, res)
 
 	} else {
 		heatmap_material =
-		    new THREE.MeshBasicMaterial();
+		    new THREE.MeshBasicMaterial({
+		    	vertexColors: THREE.VertexColors 
+		    });
+
+			// new THREE.MeshDepthMaterial();
+
+			// new THREE.MeshLambertMaterial({
+			// 	vertexColors: THREE.VertexColors
+			// });
+			// new THREE.MeshBasicMaterial({
+			//       color: Math.floor(Math.random() * 16777215),
+			//       shading: THREE.FlatShading,
+			//       side: THREE.DoubleSide
+			// });
 		
 		//add material to collection
 	    viewer.impl.matman().addMaterial(
-		    'ADN-Material' + 'red',
+		    'HeatmapMaterial',
 		    heatmap_material,
 		    true);
 	}
