@@ -95,3 +95,12 @@ InjectionManager.prototype.deselectAllPoints = function() {
     p.deselect();
   });
 };
+
+InjectionManager.prototype.getInjectionPointsLocation = function()
+{
+  var res = [];
+  for(var i=0; i<this.injectionPoints.length; i++){
+    res.push( this.injectionPoints[i].location );
+  } 
+  return res;
+}
