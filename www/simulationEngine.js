@@ -13,7 +13,8 @@ var configureSimulation = function(inj_pts)
 		faces: [],
 		inj_pts: []
 	}
-	var renderProxy = viewer.impl.getRenderProxy(viewer.model, 0);
+	var viewerCanvas = app.getViewerCanvas();
+	var renderProxy = viewerCanvas.impl.getRenderProxy(viewerCanvas.model, 0);
 	var stride = renderProxy.geometry.vbstride;
 	var coords = renderProxy.geometry.vb;
 	var faces = renderProxy.geometry.ib;
@@ -131,6 +132,8 @@ function createHeatmapGeometry(pts, faces, res)
 
 function visualizeSimulationResults(pts, faces, res)
 {
+	var viewerCanvas = app.getViewerCanvas();
+
 	if(heatmap_material){
 
 	} else {
@@ -156,7 +159,7 @@ function visualizeSimulationResults(pts, faces, res)
 			// });
 		
 		//add material to collection
-	    viewer.impl.matman().addMaterial(
+	    viewerCanvas.impl.matman().addMaterial(
 		    'HeatmapMaterial',
 		    heatmap_material,
 		    true);
@@ -173,10 +176,10 @@ function visualizeSimulationResults(pts, faces, res)
                 heatmap_material
             );
         heatmap_mesh.position.set(0, 0, 0);
-		viewer.impl.scene.add(heatmap_mesh);   
+		viewerCanvas.impl.scene.add(heatmap_mesh);
 	}   
 
-	viewer.impl.invalidate(true);
+	viewerCanvas.impl.invalidate(true);
 }
 
 

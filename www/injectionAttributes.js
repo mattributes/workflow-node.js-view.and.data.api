@@ -54,9 +54,15 @@ InjectionPoint.prototype.deselect = function(){
   app.getViewerCanvas().impl.invalidate(true);
 }
 
+InjectionPoint.prototype.remove = function(){
+  app.getViewerCanvas().impl.scene.remove(this.sphere);
+}
+
 //Injection Manager
 //keeps track of all injection points
-var InjectionManager = function(viewer){
+var InjectionManager = function(){
+  var viewer = app.getViewerCanvas();
+
   viewer.addEventListener("selection", this.handleSelection.bind(this));
 
   var self = this;
@@ -73,7 +79,27 @@ var InjectionManager = function(viewer){
     self.add(location, viewer);
   });
 
+  //updates cursor when over model
+  $("#viewerDiv").on("mousemove", function(e) {
+    var x = e.offsetX/viewer.container.offsetWidth;
+    var y = e.offsetY/viewer.container.offsetHeight;
+    var location = viewer.utilities.getHitPoint(x, y);
+    if (!location) {
+      $(this).removeClass("injectCursor");
+    }else{
+      $(this).addClass("injectCursor");
+    }
+  });
+
   this.injectionPoints = [];
+}
+
+InjectionManager.instance = function(){
+  if (!this._instance){
+      this._instance = new InjectionManager();
+  }
+
+  return this._instance;
 }
 
 InjectionManager.prototype.handleSelection = function(e){
@@ -94,6 +120,15 @@ InjectionManager.prototype.deselectAllPoints = function() {
   _.each(this.injectionPoints, function(p){
     p.deselect();
   });
+};
+
+InjectionManager.prototype.reset = function() {
+  _.each(this.injectionPoints, function(p){
+    p.remove();
+  });
+
+  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.removeAll();
+  this.injectionPoints = [];
 };
 
 InjectionManager.prototype.getInjectionPointsLocation = function()
