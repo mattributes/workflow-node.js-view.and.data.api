@@ -6,8 +6,6 @@
 AutodeskNamespace("Autodesk.ADN.Viewing.Extension");
 
 Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
-
-  debugger;
   Autodesk.Viewing.Extension.call(this, viewer, options);
 
   var _panel = null;
