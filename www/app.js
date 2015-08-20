@@ -74,10 +74,8 @@ App.prototype.loadDocument = function(urn) {
     viewerCanvas.impl.unloadCurrentModel();
     viewerCanvas.load(pathInfoCollection.path3d[0].path);
 
-    self._injectionManager = InjectionManager.instance();
+    self._injectionManager = InjectionManager.getOrCreateInstance();
     self._currentDocumentUrn = urn;
-
-    self._injectionManager.reset();
 
   }, function (error) {
     self._currentDocumentUrn = "";
