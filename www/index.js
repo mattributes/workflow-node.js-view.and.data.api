@@ -23,7 +23,7 @@ $(document).ready(function () {
     var tokenurl = 'http://' + window.location.host + '/api/token';
     var config = {
         //environment : 'AutodeskProduction'
-		environment : 'AutodeskStaging'
+        environment : 'AutodeskStaging'
     };
 
     // Instantiate viewer factory
