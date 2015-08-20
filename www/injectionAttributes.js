@@ -3,6 +3,9 @@ var InjectionPoint = function(obj){
   this.temperature = 0;
   this.velocity = 0;
   this.sphere = null;
+
+  //TODO hacky way of view binding to model
+  this.uiContainer = null;
 };
 
 InjectionPoint.prototype._getBoundingBoxDiagonal = function(viewer) {
@@ -50,8 +53,10 @@ InjectionPoint.prototype.deselect = function(){
   app.getViewerCanvas().impl.invalidate(true);
 }
 
-InjectionPoint.prototype.remove = function(){
+InjectionPoint.prototype.delete = function(){
   app.getViewerCanvas().impl.scene.remove(this.sphere);
+  app.getViewerCanvas().impl.invalidate(true);
+  this.uiContainer.remove();
 }
 
 //Injection Manager
@@ -59,30 +64,33 @@ InjectionPoint.prototype.remove = function(){
 var InjectionManager = function(){
   var viewer = app.getViewerCanvas();
 
-  var self = this;
-  $("#viewerDiv").click(function(e) {
+  var hitTestWithEvent = function(e, callback) {
     var x = e.offsetX/viewer.container.offsetWidth;
     var y = e.offsetY/viewer.container.offsetHeight;
     var location = viewer.utilities.getHitPoint(x, y);
-    if (!location) {
-      console.log('bad');
-      return;
-    }
+    callback(location);
+  };
 
-    console.log('good');
-    self.add(location, viewer);
+  var self = this;
+  $("#viewerDiv").click(function(e) {
+    hitTestWithEvent(e, function(location) {
+      if (!location) {
+        return;
+      }
+      self.add(location, viewer);
+    });
   });
 
   //updates cursor when over model
   $("#viewerDiv").on("mousemove", function(e) {
-    var x = e.offsetX/viewer.container.offsetWidth;
-    var y = e.offsetY/viewer.container.offsetHeight;
-    var location = viewer.utilities.getHitPoint(x, y);
-    if (!location) {
-      $(this).removeClass("injectCursor");
-    }else{
-      $(this).addClass("injectCursor");
-    }
+    var $that = $(this);
+    hitTestWithEvent(e, function(location) {
+      if (!location) {
+        $that.removeClass("injectCursor");
+        return;
+      }
+      $that.addClass("injectCursor");
+    });
   });
 
   this.injectionPoints = [];
@@ -90,15 +98,18 @@ var InjectionManager = function(){
 
 InjectionManager.instance = function(){
   if (!this._instance){
-      this._instance = new InjectionManager();
+    this._instance = new InjectionManager();
   }
-
   return this._instance;
 }
 
 InjectionManager.prototype.add = function(location, viewer) {
   this.deselectAllPoints();
-  var injectionPoint = new InjectionPoint({location: location});
+
+  var injectionPoint = new InjectionPoint({
+    location: location
+  });
+
   injectionPoint.createGeometry(viewer);
   Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.addPoint(injectionPoint);
   this.injectionPoints.push(injectionPoint);
@@ -111,12 +122,20 @@ InjectionManager.prototype.deselectAllPoints = function() {
 };
 
 InjectionManager.prototype.reset = function() {
+  var self = this;
   _.each(this.injectionPoints, function(p){
-    p.remove();
+    self.removePoint(p);
   });
+};
 
-  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.removeAll();
-  this.injectionPoints = [];
+InjectionManager.prototype.removePoint = function(point) {
+  point.delete();
+
+  var index = this.injectionPoints.indexOf(point);
+
+  if (index > -1) {
+    this.injectionPoints.splice(index, 1);
+  }
 };
 
 InjectionManager.prototype.getInjectionPointsLocation = function()

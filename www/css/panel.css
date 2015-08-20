@@ -1,0 +1,28 @@
+.pointContainer{
+  font-size:12px;
+  width:366px;
+  padding:2px 5px;
+  position:relative;
+}
+
+.pointContainer .inputContainer{
+	margin-bottom:3px;
+}
+
+.pointContainer .remove{
+  color: white;
+  position: absolute;
+  right: 15px;
+  font-size: 24px;
+  top: 12px;
+}
+
+.pointContainer .remove:hover{
+  color: red;
+  cursor:pointer;
+}
+
+.pointContainer input.uicomponent-panel-input{
+	height:20px;
+	margin-bottom:3px;
+}
