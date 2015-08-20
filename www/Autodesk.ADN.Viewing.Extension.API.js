@@ -297,18 +297,22 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     var tempInput = $("<input class='uicomponent-panel-input temperatureInput' type='text'></input>").val(point.temperature);
     var velocityInput = $("<input class='uicomponent-panel-input velocityInput' type='text'></input>").val(point.velocity);
-
+    var removePointButton = $("<div class='remove glyphicon glyphicon-remove-sign'></div>");
     var pointContainer = $("<div class='pointContainer active'></div>");
 
+    //TODO hacky binding of ui to the point model
+    point.uiContainer = pointContainer;
+
     $(this.content).append(pointContainer.append([
-      $("<div></div>").append([
+      $("<div class='inputContainer'></div>").append([
         $("<label class='uicomponent-panel-label'>Temperature : </label>"),
         tempInput
       ]),
-      $("<div></div>").append([
+      $("<div class='inputContainer'></div>").append([
         $("<label class='uicomponent-panel-label'>Velocity : </label>"),
         velocityInput
-      ])
+      ]),
+      removePointButton
     ]));
 
     tempInput.on("change", function(){
@@ -326,7 +330,12 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
       pointContainer.addClass("active");
 
       point.select();
-    })
+    });
+
+    removePointButton.on("click", function(){
+      //TODO hacking - replace with method to get injection manager
+      app._injectionManager.removePoint(point);
+    });
 
     this.setVisible(true);
   };
@@ -436,7 +445,7 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   ///////////////////////////////////////////////////////
   function isCssLoaded(name) {
     // TODO: there is a bug here, we had bootstrap loaded, Dylan just returning true
-    return true;
+    //return true;
     for(var i=0; i < document.styleSheets.length; ++i){
 
       var styleSheet = document.styleSheets[i];

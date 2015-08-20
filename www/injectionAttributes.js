@@ -3,6 +3,9 @@ var InjectionPoint = function(obj){
   this.temperature = 0;
   this.velocity = 0;
   this.sphere = null;
+
+  //TODO hacky way of view binding to model
+  this.uiContainer = null;
 };
 
 InjectionPoint.prototype._getBoundingBoxDiagonal = function(viewer) {
@@ -50,8 +53,10 @@ InjectionPoint.prototype.deselect = function(){
   app.getViewerCanvas().impl.invalidate(true);
 }
 
-InjectionPoint.prototype.remove = function(){
+InjectionPoint.prototype.delete = function(){
   app.getViewerCanvas().impl.scene.remove(this.sphere);
+  app.getViewerCanvas().impl.invalidate(true);
+  this.uiContainer.remove();
 }
 
 //Injection Manager
@@ -100,7 +105,11 @@ InjectionManager.instance = function(){
 
 InjectionManager.prototype.add = function(location, viewer) {
   this.deselectAllPoints();
-  var injectionPoint = new InjectionPoint({location: location});
+
+  var injectionPoint = new InjectionPoint({
+    location: location
+  });
+
   injectionPoint.createGeometry(viewer);
   Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.addPoint(injectionPoint);
   this.injectionPoints.push(injectionPoint);
@@ -113,12 +122,20 @@ InjectionManager.prototype.deselectAllPoints = function() {
 };
 
 InjectionManager.prototype.reset = function() {
+  var self = this;
   _.each(this.injectionPoints, function(p){
-    p.remove();
+    self.removePoint(p);
   });
+};
 
-  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.removeAll();
-  this.injectionPoints = [];
+InjectionManager.prototype.removePoint = function(point) {
+  point.delete();
+
+  var index = this.injectionPoints.indexOf(point);
+
+  if (index > -1) {
+    this.injectionPoints.splice(index, 1);
+  }
 };
 
 InjectionManager.prototype.getInjectionPointsLocation = function()
