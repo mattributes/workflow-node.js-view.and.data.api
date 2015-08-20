@@ -122,10 +122,11 @@ InjectionManager.prototype.deselectAllPoints = function() {
 };
 
 InjectionManager.prototype.reset = function() {
-  var self = this;
   _.each(this.injectionPoints, function(p){
-    self.removePoint(p);
+    p.delete();
   });
+
+  this.injectionPoints = [];
 };
 
 InjectionManager.prototype.removePoint = function(point) {
