@@ -2,9 +2,6 @@ var InjectionPoint = function(obj){
   this.location = obj.location;
   this.temperature = 0;
   this.velocity = 0;
-
-  //create new instance in panel.
-  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.addPoint(this);
 };
 
 InjectionPoint.prototype._getBoundingBoxDiagonal = function(viewer) {
@@ -64,7 +61,7 @@ var InjectionManager = function(viewer){
     self.add(location, viewer);
   });
 
-  this.all = [];
+  this.injectionPoints = [];
 }
 
 InjectionManager.prototype.handleSelection = function(e){
@@ -76,5 +73,6 @@ InjectionManager.prototype.handleSelection = function(e){
 InjectionManager.prototype.add = function(location, viewer) {
   var injectionPoint = new InjectionPoint({location: location});
   injectionPoint.createGeometry(viewer);
-  this.all.push(injectionPoint);
+  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.addPoint(injectionPoint);
+  this.injectionPoints.push(injectionPoint);
 }
