@@ -1,15 +1,12 @@
-var runSimulation = function()
+var runSimulation = function(inj_pts)
 {
-	var pts_ = [];
-	var inj_pts_ = [];
-
-	var modelData = configureSimulation();
+	var modelData = configureSimulation(inj_pts);
 	var res = runSimulationInternal(modelData.pts, modelData.inj_pts);
 	visualizeSimulationResults(modelData.pts, modelData.faces, res);
 	return res;
 }
 
-var configureSimulation = function()
+var configureSimulation = function(inj_pts)
 {
 	var res = {
 		pts: [],
@@ -38,14 +35,24 @@ var configureSimulation = function()
 	}
 
 	//injection points
-	var n_inj_pts = 3;
-	for(var i=0; i<n_inj_pts; i++){
+	for(var i=0; i<inj_pts.length; i++){
 		res.inj_pts.push(
 			{
 				id: i,
-				xyz: [Math.random(), Math.random(), Math.random()]
+				xyz: [inj_pts[i].x, inj_pts[i].y, inj_pts[i].z]
 			});
 	}
+
+	if(res.pts.length < 3){
+		console.error("Simulation Configuration Error: Mesh must have at least three vertices");
+	}
+	if(res.faces.length < 1){
+		console.error("Simulation Configuration Error: Mesh must have at least one face");
+	}
+	if(res.inj_pts.length < 1){
+		console.error("Simulation Configuration Error: Mesh must have at least one injection point");
+	}
+
 	return res;
 }
 
@@ -89,8 +96,11 @@ function runSimulationInternal(pts, inj_pts)
 
 function simulatePointTime(p, inj_pts)
 {
+	var res = Infinity;
 	var closest_inj_pt_id = getClosestInjectionPoint(p, inj_pts);
-	var res = pointToPointDistance3D(p.xyz, inj_pts[closest_inj_pt_id].xyz);
+	if(closest_inj_pt_id != -1){
+		res = pointToPointDistance3D(p.xyz, inj_pts[closest_inj_pt_id].xyz);
+	}
 	return res;
 }
 
@@ -116,7 +126,6 @@ function createHeatmapGeometry(pts, faces, res)
 	for(var i=0; i<res.length; i++){
 		geom.colors.push( new THREE.Color(1,1,0) );
 	}
-
 	return geom;
 }
 
@@ -135,10 +144,15 @@ function visualizeSimulationResults(pts, faces, res)
 			// new THREE.MeshLambertMaterial({
 			// 	vertexColors: THREE.VertexColors
 			// });
+
 			// new THREE.MeshBasicMaterial({
 			//       color: Math.floor(Math.random() * 16777215),
 			//       shading: THREE.FlatShading,
 			//       side: THREE.DoubleSide
+			// });
+
+			// new THREE.LineBasicMaterial({
+			// 	vertexColors: THREE.VertexColors
 			// });
 		
 		//add material to collection
@@ -161,6 +175,8 @@ function visualizeSimulationResults(pts, faces, res)
         heatmap_mesh.position.set(0, 0, 0);
 		viewer.impl.scene.add(heatmap_mesh);   
 	}   
+
+	viewer.impl.invalidate(true);
 }
 
 
