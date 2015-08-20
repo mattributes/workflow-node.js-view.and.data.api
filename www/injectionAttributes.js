@@ -29,10 +29,6 @@ InjectionPoint.prototype.createGeometry = function(viewer) {
   viewer.impl.invalidate(true);
 };
 
-InjectionPoint.prototype.attachToGeometry = function(){
-
-};
-
 InjectionPoint.prototype.setTemperature = function(val){
   this.tempereature = val;
 }
@@ -62,8 +58,6 @@ InjectionPoint.prototype.remove = function(){
 //keeps track of all injection points
 var InjectionManager = function(){
   var viewer = app.getViewerCanvas();
-
-  viewer.addEventListener("selection", this.handleSelection.bind(this));
 
   var self = this;
   $("#viewerDiv").click(function(e) {
@@ -101,12 +95,6 @@ InjectionManager.instance = function(){
 
   return this._instance;
 }
-
-InjectionManager.prototype.handleSelection = function(e){
-  // alert("clicked on fragId " + e.fragIdsArray[0]);
-  // this.add(e.fragIdsArray[0]);
-  // console.log(this.all);
-};
 
 InjectionManager.prototype.add = function(location, viewer) {
   this.deselectAllPoints();
