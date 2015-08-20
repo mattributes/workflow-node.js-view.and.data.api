@@ -2,11 +2,24 @@ var InjectionPoint = function(obj){
 	this.location = obj.location;
 	this.temperature = 0;
 	this.velocity = 0;
+
+	//create new instance in panel.
+	Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.addPoint(this);
 };
 
 InjectionPoint.prototype.attachToGeometry = function(){
 
 };
+
+InjectionPoint.prototype.setTemperature = function(val){
+	this.tempereature = val;
+	//console.log(this);
+}
+
+InjectionPoint.prototype.setVelocity = function(val){
+	this.velocity = val;
+	//console.log(this);
+}
 
 //Injection Manager
 //keeps track of all injection points
@@ -39,5 +52,3 @@ InjectionManager.prototype.handleSelection = function(e){
 InjectionManager.prototype.add = function(location){
 	this.all.push(new InjectionPoint({location: location}));
 }
-
-

@@ -276,16 +276,24 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
     Autodesk.ADN.Viewing.Extension.UIComponent.Panel;
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.addPoint = function(point){
+
+    var tempInput = $("<input class='uicomponent-panel-input temperatureInput' type='text'></input>").val(point.temperature);
+    var velocityInput = $("<input class='uicomponent-panel-input velocityInput' type='text'></input>").val(point.velocity);
+
     $(this.content).append($("<div></div>").append([
       $("<label class='uicomponent-panel-label'>Temperature : </label>"),
-      $("<input class='uicomponent-panel-input temperatureInput' type='text'></input>"),
+      tempInput,
       $("<label class='uicomponent-panel-label'>Velocity : </label>"),
-      $("<input class='uicomponent-panel-input velocityInput' type='text'></input>")
+      velocityInput
     ]));
-  };
 
-  Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.selectPoint = function(point){
+    tempInput.on("change", function(){
+      point.setTemperature(tempInput.val());
+    });
 
+    velocityInput.on("change", function(){
+      point.setVelocity(velocityInput.val());
+    });
   };
 
   Autodesk.ADN.Viewing.Extension.UIComponent.Panel.prototype.initialize = function()
