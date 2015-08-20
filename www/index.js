@@ -26,6 +26,12 @@ $(document).ready(function () {
         runSimulation(injection_pts);
         showResultsTools(true);
     });
+
+    $(window).resize(function() {
+        $("#mainView").height($(window).height() * 0.75);
+    });
+
+    $("#mainView").height($(window).height() * 0.75);
 });
 
 function showResultsTools(show) {

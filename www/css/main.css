@@ -7,7 +7,9 @@ html {
 
 body {
    margin: 0;
-   height: 100%
+   width: 100%;
+   padding-left: 30px;
+   padding-right: 30px;
 }
 
 a {
@@ -16,7 +18,6 @@ a {
 
 header {
   background-color: #f5f5f5;
-  height: 8%;  
 }
 
 footer {
@@ -25,7 +26,7 @@ footer {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 6%;  
+  height: 6%;
   text-align: center;
   display: inline-block;
   vertical-align: middle;
@@ -36,42 +37,35 @@ footer {
 }
 
 #mainView {
-   position: absolute;
-   width: 80%;
-   height: 77%;
-   right: 0px;
 }
 
 #viewerDiv {
-   height: 60%;
-   width: 100%;
-   overflow: hidden;
+/*   height: 500px;
    position: relative;
+   width: 100%;
+   overflow: hidden;*/
 }
 
 #modelBrowser {
-   position: relative;
+/*   position: relative;
    left: 0px;
    height: 130;
-   width: 100%;
+   width: 100%;*/
 }
 
 #resultsData {
-  position: relative;
-  height: 35%;
+/*  position: relative;
+  height: 35%;*/
+  padding-top: 15px;
 }
 
 #simulationCtrls {
+  padding-top: 10px;
   position: relative;
-  background-color: #f5f5f5;
-  height: 5%;
+  background-color: #f5f5f5;  
 }
 
 #commentPanel{
-   position: absolute;
-   left: 0px;
-   height: 77%;
-   width: 20%;
 }
 
 .placeholder {
@@ -91,16 +85,16 @@ footer {
 }
 
 #signIn{
-  position: absolute;
+/*  position: absolute;
   top: 15px;
-  right: 15px;
+  right: 15px;*/
 }
 
 #signOut {
   display: none;
-  position: absolute;
+/*  position: absolute;
   top: 15px;
-  right: 15px;
+  right: 15px;*/
 }
 
 #notifications {
