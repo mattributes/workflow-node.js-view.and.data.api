@@ -3,6 +3,7 @@ var App = function() {
   this._injectionManager = null;
   this._viewerFactory = null;
   this._viewerCanvas = null;
+  this._geomKeeper = null;
   this._userInfo = null;
   this._tokenurl = 'http://' + window.location.host + '/api/token';
   this._config = {
@@ -12,7 +13,6 @@ var App = function() {
 };
 
 App.prototype.init = function() {
-
   if (this._userInfo !== null) {
     this.createUserContent();
   }
@@ -50,6 +50,9 @@ App.prototype.getInjectionManager = function() {
   return this._injectionManager;
 };
 
+App.prototype.getGeomKeeper = function() {
+  return this._geomKeeper;
+};
 
 // TODO: Move this function to App.prototype.init().
 App.prototype.initViewerCanvas = function() {
@@ -82,6 +85,7 @@ App.prototype.loadDocument = function(urn) {
     viewerCanvas.load(pathInfoCollection.path3d[0].path);
 
     self._injectionManager = InjectionManager.getOrCreateInstance();
+    self._geomKeeper = GeomKeeper.getOrCreateInstance();
     self._currentDocumentUrn = urn;
 
   }, function (error) {

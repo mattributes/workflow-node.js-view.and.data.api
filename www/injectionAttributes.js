@@ -2,7 +2,7 @@ var InjectionPoint = function(obj){
   this.location = obj.location;
   this.temperature = 200;
   this.velocity = 100;
-  this.sphere = null;
+  this.geomId = -1;
 
   //TODO hacky way of view binding to model
   this.uiContainer = null;
@@ -25,11 +25,10 @@ InjectionPoint.prototype.createGeometry = function(viewer) {
   viewer.impl.matman().addMaterial('MaterialForInjectionPoint', material, true);
 
   var sphereRadius = this._getBoundingBoxDiagonal(viewer) / 50;
-  this.sphere = new THREE.Mesh(new THREE.SphereGeometry(sphereRadius, 20), material);
-  this.sphere.position.set(this.location.x, this.location.y, this.location.z);
+  var sphere = new THREE.Mesh(new THREE.SphereGeometry(sphereRadius, 20), material);
+  sphere.position.set(this.location.x, this.location.y, this.location.z);
 
-  viewer.impl.scene.add(this.sphere);
-  viewer.impl.invalidate(true);
+  this.geomId = app.getGeomKeeper().addGeometry(sphere);
 };
 
 InjectionPoint.prototype.setTemperature = function(val){
@@ -44,18 +43,17 @@ InjectionPoint.prototype.select = function(){
   //TODO hacking - replace with method to get injection manager
   //when selecting a point, deselect all other points.
   app._injectionManager.deselectAllPoints();
-  this.sphere.material.color.setHex( 0xff0000 );
+  app.getGeomKeeper().getGeometry(this.geomId).material.color.setHex( 0xff0000 );
   app.getViewerCanvas().impl.invalidate(true);
 }
 
 InjectionPoint.prototype.deselect = function(){
-  this.sphere.material.color.setHex( 0xffffff );
+  app.getGeomKeeper().getGeometry(this.geomId).material.color.setHex( 0xffffff );
   app.getViewerCanvas().impl.invalidate(true);
 }
 
 InjectionPoint.prototype.delete = function(){
-  app.getViewerCanvas().impl.scene.remove(this.sphere);
-  app.getViewerCanvas().impl.invalidate(true);
+  app.getGeomKeeper().removeGeometry(this.geomId);
   this.uiContainer.remove();
 }
 
