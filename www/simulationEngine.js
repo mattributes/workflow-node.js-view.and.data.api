@@ -105,8 +105,8 @@ function simulatePointTime(p, inj_pts)
 	return res;
 }
 
-var heatmap_material = null;
-var heatmap_mesh = null;
+// var heatmap_material = null;
+// var heatmap_mesh = null;
 
 
 function createHeatmapGeometry(pts, faces, res)
@@ -121,12 +121,21 @@ function createHeatmapGeometry(pts, faces, res)
 
 	for(var i=0; i<faces.length; i++){
 		var face = faces[i].idxs;
-		geom.faces.push( new THREE.Face3( face[0], face[1], face[2] ) );
+		geom.faces.push( new THREE.Face3( face[0], face[1], face[2],
+											new THREE.Vector3( 0, 0, 1 ),
+											new THREE.Color(
+												Math.random(),
+												Math.random(),
+												Math.random())
+		 ) );
 	}
 
 	for(var i=0; i<res.length; i++){
-		geom.colors.push( new THREE.Color(1,1,0) );
+		geom.colors.push( new THREE.Color(0,1,0) );
 	}
+
+	geom.computeFaceNormals();
+	geom.computeVertexNormals(); 
 	return geom;
 }
 
@@ -134,51 +143,33 @@ function visualizeSimulationResults(pts, faces, res)
 {
 	var viewerCanvas = app.getViewerCanvas();
 
-	if(heatmap_material){
+	var heatmap_material = new THREE.MeshBasicMaterial(
+		{
+			color: 0xffffff,
+      		opacity: 0.0,
+      		shading: THREE.FlatShading,
+      		side: THREE.DoubleSide,
+      		vertexColors: THREE.VertexColors,
+      		envMap: null,
+      		specularMap: null,
+      		alphaMap: null,
+      		lightMap: null
+		});
+	
+	viewerCanvas.impl.matman().addMaterial('ADN-Material'+'heatmap', heatmap_material, true);
 
-	} else {
-		heatmap_material =
-		    new THREE.MeshBasicMaterial({
-		    	vertexColors: THREE.VertexColors 
-		    });
+	var heatmap_geom = createHeatmapGeometry(pts, faces, res);
 
-			// new THREE.MeshDepthMaterial();
-
-			// new THREE.MeshLambertMaterial({
-			// 	vertexColors: THREE.VertexColors
-			// });
-
-			// new THREE.MeshBasicMaterial({
-			//       color: Math.floor(Math.random() * 16777215),
-			//       shading: THREE.FlatShading,
-			//       side: THREE.DoubleSide
-			// });
-
-			// new THREE.LineBasicMaterial({
-			// 	vertexColors: THREE.VertexColors
-			// });
-		
-		//add material to collection
-	    viewerCanvas.impl.matman().addMaterial(
-		    'HeatmapMaterial',
-		    heatmap_material,
-		    true);
-	}
-
-	if(heatmap_mesh){
-
-	} else {
-		var heatmap_geom = createHeatmapGeometry(pts, faces, res);
-
-		heatmap_mesh =
-			new THREE.Mesh(
-                heatmap_geom,           
-                heatmap_material
-            );
-        heatmap_mesh.position.set(0, 0, 0);
-		viewerCanvas.impl.scene.add(heatmap_mesh);
-	}   
-
+	var heatmap_mesh =
+		new THREE.Mesh(
+            heatmap_geom,
+            heatmap_material
+        );
+    heatmap_mesh.position.set(0, 0, 0);
+	
+	//adding to LMV
+	
+	viewerCanvas.impl.scene.add(heatmap_mesh);   
 	viewerCanvas.impl.invalidate(true);
 }
 
