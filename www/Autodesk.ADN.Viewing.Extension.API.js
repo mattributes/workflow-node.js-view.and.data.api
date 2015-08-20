@@ -325,11 +325,13 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
     $("#AllPointsContainer").append(pointContainer.append([
       $("<div class='inputContainer'></div>").append([
         $("<label class='uicomponent-panel-label'>Temperature : </label>"),
-        tempInput
+        tempInput,
+        $("<span class='subLabel'>[&deg;C]</span>")
       ]),
       $("<div class='inputContainer'></div>").append([
         $("<label class='uicomponent-panel-label'>Velocity : </label>"),
-        velocityInput
+        velocityInput,
+        $("<span class='subLabel'>[m/s]</span>")
       ]),
       removePointButton
     ]));

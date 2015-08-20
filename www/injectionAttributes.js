@@ -1,7 +1,7 @@
 var InjectionPoint = function(obj){
   this.location = obj.location;
-  this.temperature = 0;
-  this.velocity = 0;
+  this.temperature = 200;
+  this.velocity = 100;
   this.sphere = null;
 
   //TODO hacky way of view binding to model
