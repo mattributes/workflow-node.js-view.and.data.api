@@ -280,11 +280,17 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
     var tempInput = $("<input class='uicomponent-panel-input temperatureInput' type='text'></input>").val(point.temperature);
     var velocityInput = $("<input class='uicomponent-panel-input velocityInput' type='text'></input>").val(point.velocity);
 
-    $(this.content).append($("<div></div>").append([
-      $("<label class='uicomponent-panel-label'>Temperature : </label>"),
-      tempInput,
-      $("<label class='uicomponent-panel-label'>Velocity : </label>"),
-      velocityInput
+    var pointContainer = $("<div class='pointContainer'></div>");
+
+    $(this.content).append(pointContainer.append([
+      $("<div></div>").append([
+        $("<label class='uicomponent-panel-label'>Temperature : </label>"),
+        tempInput
+      ]),
+      $("<div></div>").append([
+        $("<label class='uicomponent-panel-label'>Velocity : </label>"),
+        velocityInput
+      ])
     ]));
 
     tempInput.on("change", function(){
@@ -317,6 +323,10 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   };
 
   var css = [
+
+    /*.pointContainer{
+      border: solid 1px
+    }*/
 
     'div.uicomponent-panel-content {',
       'height: calc(100% - 5px);',
