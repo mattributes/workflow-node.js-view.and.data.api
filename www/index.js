@@ -20,30 +20,12 @@ $(document).ready(function () {
     app = new App();
     app.init();
 
-    $('#solve').click(function() {
-        var injection_pts = 
-            app.getInjectionManager().getInjectionPointsLocation();
-        runSimulation(injection_pts);
-        showResultsTools(true);
-    });
-
     $(window).resize(function() {
         $("#mainView").height($(window).height() * 0.75);
     });
 
     $("#mainView").height($(window).height() * 0.75);
 });
-
-function showResultsTools(show) {
-    if (show) {
-        $('#resultTools').show();
-        $('#noResults').hide();
-    }
-    else {
-        $('#resultTools').hide();
-        $('#noResults').show();
-    }
-};
 
 // The following code does not rely on Autodesk.ADN.Toolkit.Viewer.AdnViewerManager
 // and uses the Autodesk API directly.

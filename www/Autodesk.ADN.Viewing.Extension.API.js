@@ -118,13 +118,21 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   /////////////////////////////////////////////
   function createControls(parentGroup) {
 
-    var btn = createButton(
+    var injectionLocationBtn = createButton(
       'Autodesk.ADN.UIComponent.Button.Show',
       'injectIcon',
       'Show Injection Points',
       onShowPanel);
 
-    parentGroup.addControl(btn);
+    parentGroup.addControl(injectionLocationBtn);
+
+    var solveBtn = createButton(
+      'Autodesk.ADN.UIComponent.Button.ShowSolve',
+      'solveIcon',
+      'Solve',
+      onSolve);
+
+    parentGroup.addControl(solveBtn);
   }
 
   /////////////////////////////////////////////
@@ -134,6 +142,14 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   function onShowPanel() {
 
     _panel.setVisible(true);
+  }
+
+  /////////////////////////////////////////////
+  //
+  //
+  /////////////////////////////////////////////
+  function onSolve() {
+    window.app.solveCurrentModel();
   }
 
   /////////////////////////////////////////////
@@ -396,6 +412,15 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     '.injectIcon {',
       'background-image:url(/images/injectIcon.png);',
+      'display: block;',
+      'width: 42px;',
+      'height: 42px;',
+      'margin-top: -6px;',
+      'margin-left: -6px;',
+    '}',
+
+    '.solveIcon {',
+      'background-image:url(/images/solve-cloud.png);',
       'display: block;',
       'width: 42px;',
       'height: 42px;',
