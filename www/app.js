@@ -103,8 +103,9 @@ App.prototype.doUploadFiles = function(files) {
 
                           // TODO: update client UI
                           //sendNotification(response.urn, file.name);
-                          self._knownModels.push(response.urn);
+                          self._knownModels.unshift(response.urn);
                           reGenerateModelsDom();
+                          self.loadDocument(response.urn);
                       }
               });
           }, 2000);
