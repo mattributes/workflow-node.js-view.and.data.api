@@ -36,6 +36,8 @@ var App = function() {
     // // Name/description of model
     // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs'
   ];
+  
+  this._commentsApp = null;
 };
 
 App.prototype.init = function() {
@@ -171,6 +173,7 @@ App.prototype.loadDocument = function(urn) {
     self._geomKeeper = GeomKeeper.getOrCreateInstance();
     self._currentDocumentUrn = urn;
 
+    self.loadCommentsForCurrentDocument();
   }, function (error) {
     self._currentDocumentUrn = "";
     self._injectionManager = null;
@@ -244,4 +247,49 @@ App.prototype.showResults = function(flag) {
   showSimulationResults(flag);
 }
 
+App.prototype.getToken = function() {
+   var xmlHttp = new XMLHttpRequest();
+   xmlHttp.open('GET', this._tokenurl, false);
+   xmlHttp.send(null);
+   var resp =  JSON.parse(xmlHttp.responseText);
+   return resp.access_token;
+}
 
+App.prototype.loadCommentsForCurrentDocument = function() {
+   $('#commentPanel').html('');
+   this._commentsApp = null;
+
+   if(this.getCurrentDocumentUrn() === null) {
+      return;
+   }
+
+   var self = this;
+
+   // prepare comments setup
+   var settings = {
+      exportGlobal          : true,
+      fakeServer            : false,
+      markersAlwaysVisible  : true,
+      useAcm                : true,
+      urn                   : 'urn:adsk.comments:fs.file:' + self.getCurrentDocumentUrn(),
+      oauth2token           : self.getToken(),
+      version               : 1,
+      isOwner               : true,
+      commentId             : null,
+      env                   : self._config.environment,
+      avatarUrl             : self._userInfo.avatarUrl,
+      displayName           : self._userInfo.name,
+      oxygenId              : self._userInfo.oxygenId,
+      messageOverlayZIndex  : '999999',
+      features              : ['markups', 'replies', 'snapshot', 'annotations'],
+      //postCommentCallback   : function(dbComment) { self.commentsCallback(dbComment); }
+   };
+
+   // create comments UI application
+   this._commentsApp = Autodesk.Comments2.createCommentsApp(null, "commentPanel", settings);
+   this._commentsApp.initialize();
+};
+
+//App.prototype.commentsCallback = function(dbComment) {
+//  console.log(dbComment);
+//};
