@@ -207,6 +207,7 @@ App.prototype.onLoginCallback = function(href){
        // we are signed in
       $('#signIn').css('display', 'none');
       $('#signOut').css('display', 'inline');
+      $('#NavItems').show();
       $('#signOut').html(params['openid.alias3.value.alias1']);
 
       this._userInfo = {};
@@ -234,6 +235,7 @@ App.prototype.signOut = function() {
   Oxygen.signOut();
   this.resetLoginBtn();
   this._userInfo = null;
+  $('#NavItems').hide();
   $("#userContent").css('display', 'none');
   $("#loginRequired").css('display', 'inline');
 };

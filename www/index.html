@@ -70,10 +70,14 @@
            <div id="navbar" class="">
                 <div id="loggedOutNav">
                     <!--TODO glyphicon glyphicon-user-->
-                    <div id='CommentNav' class='navItem glyphicon glyphicon glyphicon-comment'></div>
-                    <div id='FilesNav' class='navItem glyphicon glyphicon-floppy-disk'></div>
-                    <button id="signIn" type="button" class="btn btn-primary right">Sign in</button>
-                    <button id="signOut" type="button" class="btn btn-primary right">Sign out</button>
+                    <div id='NavItems' class='floatLeft none'>
+                        <div id='CommentNav' class='navItem glyphicon glyphicon glyphicon-comment'></div>
+                        <div id='FilesNav' class='navItem glyphicon glyphicon-floppy-disk'></div>
+                    </div>
+                    <div id='LoginButtons' class='floatLeft'>
+                        <button id="signIn" type="button" class="btn btn-primary right">Sign in</button>
+                        <button id="signOut" type="button" class="btn btn-primary right">Sign out</button>
+                    </div>
                 </div>
                 <div id="loggedInNav" style="display:none">
                     <form class="navbar-form navbar-right" role="form" name="logout">
@@ -91,9 +95,11 @@
                 Comments place holder
             </div>
             <div id="FilesDisplay">
-                <input type="file" class="filestyle " data-buttonName="btn-primary" data-buttonBefore="true" name="files[]" onchange="onFileSelect(event)">
-                <button id="uploadbutton" onclick="uploadFile()" class="btn btn-primary action-btn col-md-2">Upload</button>
-                <div id="modelBrowser" class=""></div>
+                <div id='FileSelectionContainer' class='floatLeft'>
+                    <input type="file" class="filestyle " data-buttonName="btn-primary" data-buttonBefore="true" name="files[]" onchange="onFileSelect(event)">
+                    <button id="uploadbutton" onclick="uploadFile()" class="btn btn-primary action-btn col-md-2">Upload</button>
+                </div>
+                <div id="modelBrowser" class="floatRight"></div>
             </div>
         </div>
         <div id="loginRequired">

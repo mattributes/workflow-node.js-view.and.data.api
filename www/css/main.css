@@ -34,7 +34,7 @@ header .logo{
 }
 
 header .navItem{
-  font-size: 20px;
+  font-size: 17px;
   background-color: #337ab7;
   padding: 10px;
   border-radius: 25px;
@@ -49,6 +49,23 @@ header .navItem.active{
   cursor:pointer;
 }
 
+.floatRight{
+  float:right;
+}
+
+.floatLeft{
+  float:left;
+}
+
+.none{
+  display:none;
+}
+
+#LoginButtons{
+  margin-top: 8px;
+  margin-left: 10px;
+}
+
 #loggedOutNav{
   float: right;
   margin-right: 15px;
@@ -59,10 +76,22 @@ header .navItem.active{
   position:absolute;
   left:0px;
   top:50px;
+  padding:10px;
+  background-color:white;
+  width:100%;
 }
 
 #FilesDisplay.active{
   display:block;
+}
+
+#FileSelectionContainer{
+  margin-top:10px;
+}
+
+#uploadbutton{
+  width: 200px;
+  margin-top: 10px;
 }
 
 #commentPanel{
@@ -122,6 +151,11 @@ header .navItem.active{
    left: 0px;
    height: 130;
    width: 100%;*/
+}
+
+#modelBrowser .model:hover{
+  background-color:#E9E9E9;
+  cursor:pointer;
 }
 
 #resultsData {
