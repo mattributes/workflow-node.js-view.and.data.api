@@ -25,161 +25,130 @@ var configureSimulation = function(inj_pts)
 
 	var viewerCanvas = app.getViewerCanvas();
 
-
-
-
-
-	// var fragProxy = viewer.impl.getFragmentProxy(viewerCanvas.model, 0);
-	// var renderProxy = viewerCanvas.impl.getRenderProxy(viewerCanvas.model, 0);
-	// var matrix = new THREE.Matrix4();
- //    fragProxy.getWorldMatrix(matrix);
-
-	// var stride = renderProxy.geometry.vbstride;
-	// var coords = renderProxy.geometry.vb;
-	// var faces = renderProxy.geometry.ib;
-
 	var savedVertices = {};
 
-	var fragId = 0;
+	var numFragments = viewerCanvas.model.getFragmentList().fragments.length;
 
-	var fragProxy = viewerCanvas.impl.getFragmentProxy(
-	  viewerCanvas.model,
-	  fragId);
+	var prevCount = 0;
 
-	var renderProxy = viewerCanvas.impl.getRenderProxy(
-	  viewerCanvas.model,
-	  fragId);
+	for(var fragId=0; fragId<numFragments; fragId++){
 
-	fragProxy.updateAnimTransform();
+		var uniqueVertexCount = 0;
 
-	var matrix = new THREE.Matrix4();
-	fragProxy.getWorldMatrix(matrix);
+		var fragProxy = viewerCanvas.impl.getFragmentProxy(
+		  viewerCanvas.model,
+		  fragId);
 
-	var geometry = renderProxy.geometry;
+		var renderProxy = viewerCanvas.impl.getRenderProxy(
+		  viewerCanvas.model,
+		  fragId);
 
-	var attributes = geometry.attributes;
+		fragProxy.updateAnimTransform();
 
-	var vA = new THREE.Vector3();
-	var vB = new THREE.Vector3();
-	var vC = new THREE.Vector3();
+		var matrix = new THREE.Matrix4();
+		fragProxy.getWorldMatrix(matrix);
 
-	if (attributes.index !== undefined) {
+		var geometry = renderProxy.geometry;
 
-	  var indices = attributes.index.array || geometry.ib;
-	  var positions = geometry.vb ? geometry.vb : attributes.position.array;
-	  var stride = geometry.vb ? geometry.vbstride : 3;
-	  var offsets = geometry.offsets;
+		var attributes = geometry.attributes;
 
-	  if (!offsets || offsets.length === 0) {
+		var vA = new THREE.Vector3();
+		var vB = new THREE.Vector3();
+		var vC = new THREE.Vector3();
 
-	    offsets = [{start: 0, count: indices.length, index: 0}];
-	  }
+		if (attributes.index !== undefined) {
 
-	  for (var oi = 0, ol = offsets.length; oi < ol; ++oi) {
+		  var indices = attributes.index.array || geometry.ib;
+		  var positions = geometry.vb ? geometry.vb : attributes.position.array;
+		  var stride = geometry.vb ? geometry.vbstride : 3;
+		  var offsets = geometry.offsets;
 
-	    var start = offsets[oi].start;
-	    var count = offsets[oi].count;
-	    var index = offsets[oi].index;
+		  if (!offsets || offsets.length === 0) {
 
-	    for (var i = start, il = start + count; i < il; i += 3) {
+		    offsets = [{start: 0, count: indices.length, index: 0}];
+		  }
 
-	      var a = index + indices[i];
-	      var b = index + indices[i + 1];
-	      var c = index + indices[i + 2];
+		  for (var oi = 0, ol = offsets.length; oi < ol; ++oi) {
 
-	      vA.fromArray(positions, a * stride);
-	      vB.fromArray(positions, b * stride);
-	      vC.fromArray(positions, c * stride);
+		    var start = offsets[oi].start;
+		    var count = offsets[oi].count;
+		    var index = offsets[oi].index;
 
-	      vA.applyMatrix4(matrix);
-	      vB.applyMatrix4(matrix);
-	      vC.applyMatrix4(matrix);
+		    for (var i = start, il = start + count; i < il; i += 3) {
 
-	      // drawVertex (vA, 0.05);
-	      // drawVertex (vB, 0.05);
-	      // drawVertex (vC, 0.05);
+		      var a = index + indices[i];
+		      var b = index + indices[i + 1];
+		      var c = index + indices[i + 2];
 
-	      // drawLine(vA, vB);
-	      // drawLine(vB, vC);
-	      // drawLine(vC, vA);
-	      if(!savedVertices[a]){
-	      	savedVertices[a] = true;
-	      	res.pts.push({id: a, xyz: [vA.x, vA.y, vA.z]});
-	      }
-	      if(!savedVertices[b]){
-	      	savedVertices[b] = true;
-	      	res.pts.push({id: b, xyz: [vB.x, vB.y, vB.z]});
-	      }
-	      if(!savedVertices[c]){
-	      	savedVertices[c] = true;
-	      	res.pts.push({id: c, xyz: [vC.x, vC.y, vC.z]});
-	      }
-		    
-		    //mesh faces
-			res.faces.push({idxs: [a, b, c]});
-	    }
-	  }
-	}
-	else {
+		      vA.fromArray(positions, a * stride);
+		      vB.fromArray(positions, b * stride);
+		      vC.fromArray(positions, c * stride);
 
-	  var positions = geometry.vb ? geometry.vb : attributes.position.array;
-	  var stride = geometry.vb ? geometry.vbstride : 3;
+		      vA.applyMatrix4(matrix);
+		      vB.applyMatrix4(matrix);
+		      vC.applyMatrix4(matrix);
 
-	  for (var i = 0, j = 0, il = positions.length; i < il; i += 3, j += 9) {
+		      // drawVertex (vA, 0.05);
+		      // drawVertex (vB, 0.05);
+		      // drawVertex (vC, 0.05);
 
-	    var a = i;
-	    var b = i + 1;
-	    var c = i + 2;
+		      // drawLine(vA, vB);
+		      // drawLine(vB, vC);
+		      // drawLine(vC, vA);
+		      if(!savedVertices[prevCount + a]){
+		      	savedVertices[prevCount + a] = true;
+		      	res.pts.push({id: prevCount + a, xyz: [vA.x, vA.y, vA.z]});
+		      	uniqueVertexCount++;
+		      }
+		      if(!savedVertices[prevCount + b]){
+		      	savedVertices[prevCount + b] = true;
+		      	res.pts.push({id: prevCount + b, xyz: [vB.x, vB.y, vB.z]});
+		      	uniqueVertexCount++;
+		      }
+		      if(!savedVertices[prevCount + c]){
+		      	savedVertices[prevCount + c] = true;
+		      	res.pts.push({id: prevCount + c, xyz: [vC.x, vC.y, vC.z]});
+		      	uniqueVertexCount++;
+		      }
+			    
+			    //mesh faces
+				res.faces.push({idxs: [prevCount + a, prevCount + b, prevCount + c]});
+		    }
+		    prevCount += uniqueVertexCount;
+		  }
+		}
+		else {
 
-	    vA.fromArray(positions, a * stride);
-	    vB.fromArray(positions, b * stride);
-	    vC.fromArray(positions, c * stride);
+		  var positions = geometry.vb ? geometry.vb : attributes.position.array;
+		  var stride = geometry.vb ? geometry.vbstride : 3;
 
-	    vA.applyMatrix4(matrix);
-	    vB.applyMatrix4(matrix);
-	    vC.applyMatrix4(matrix);
+		  for (var i = 0, j = 0, il = positions.length; i < il; i += 3, j += 9) {
 
-	    drawVertex (vA, 0.05);
-	    drawVertex (vB, 0.05);
-	    drawVertex (vC, 0.05);
+		    var a = i;
+		    var b = i + 1;
+		    var c = i + 2;
 
-	    drawLine(vA, vB);
-	    drawLine(vB, vC);
-	    drawLine(vC, vA);
-	  }
-	}
+		    vA.fromArray(positions, a * stride);
+		    vB.fromArray(positions, b * stride);
+		    vC.fromArray(positions, c * stride);
 
+		    vA.applyMatrix4(matrix);
+		    vB.applyMatrix4(matrix);
+		    vC.applyMatrix4(matrix);
 
+		    drawVertex (vA, 0.05);
+		    drawVertex (vB, 0.05);
+		    drawVertex (vC, 0.05);
 
-
-
-
-
-
-
-
-
-/*
-	// mesh points
-	var pt_count = 0;
-	for(var i=0; i<coords.length; i=i+stride, pt_count++){
-		res.pts.push({
-			id: pt_count,
-			xyz: [
-				scaleFactor*coords[i], 
-				scaleFactor*coords[i+1], 
-				scaleFactor*coords[i+2]
-			]
-		})
+		    drawLine(vA, vB);
+		    drawLine(vB, vC);
+		    drawLine(vC, vA);
+		  }
+		}
 	}
 
-	//mesh faces
-	for(i=0; i<faces.length; i=i+3){
-		res.faces.push({
-			idxs: [faces[i], faces[i+1], faces[i+2]]
-		})
-	}
-*/
+
+
 
 	//injection points
 	for(var i=0; i<inj_pts.length; i++){
