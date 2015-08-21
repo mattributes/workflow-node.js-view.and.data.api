@@ -96,7 +96,13 @@ App.prototype.doUploadFiles = function(files) {
 
 App.getAllDocumentUrns = function() {
   return [
-  // NB: these are docs Dylan uploaded via the app - but can't be rendered. WIP/TODO:
+    // Chopper (OBJ)
+    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvdWg2MC5vYmo=",
+
+    // 707.3ds
+    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvNzA3LjNEUw==",
+
+  // NB: these are docs Dylan uploaded via the app - but can't be rendered. WIP/TODO:, both are STL's...
   // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvbW1fcmFjZXRyYWNrLnN0bA==',
 
   // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvRHVzdHBhbi5zdGw=',
