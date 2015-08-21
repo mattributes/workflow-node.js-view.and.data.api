@@ -25,14 +25,14 @@ $(document).ready(function () {
     $('#signOut').click(function(){ app.signOut(); });
     Oxygen.checkImmediate();
 
-    var fudgeFactor = 0.65;
+    /*var fudgeFactor = 0.65;
     $(window).resize(function() {
         $("#mainView").height($(window).height() * fudgeFactor);
         $("#commentPanel").height($(window).height() * fudgeFactor);   
     });
 
     $("#mainView").height($(window).height() * fudgeFactor);
-    $("#commentPanel").height($(window).height() * fudgeFactor);   
+    $("#commentPanel").height($(window).height() * fudgeFactor);*/
 });
 
 // Get the file to upload

@@ -304,7 +304,11 @@ App.prototype.loadCommentsForCurrentDocument = function() {
       //postCommentCallback   : function(dbComment) { self.commentsCallback(dbComment); }
    };
 
+   //hack
+   $("#commentPanel").height($("#viewerDiv").height() - 2);
+
    // create comments UI application
+
    this._commentsApp = Autodesk.Comments2.createCommentsApp(null, "commentPanel", settings);
    this._commentsApp.initialize();
 };
