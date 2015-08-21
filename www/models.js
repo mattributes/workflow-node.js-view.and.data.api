@@ -33,4 +33,9 @@ var generateModelsDom = function(models) {
   );
 }
 
-generateModelsDom(App.getAllDocumentUrns());
+generateModelsDom(window.app.getAllDocumentUrns());
+
+window.reGenerateModelsDom = function() {
+  generateModelsDom(window.app.getAllDocumentUrns());
+}
+
