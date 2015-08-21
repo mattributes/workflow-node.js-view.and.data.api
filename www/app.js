@@ -205,7 +205,8 @@ App.prototype.solveCurrentModel = function() {
 
 App.prototype.visualizeCurrentModelSimulation = function(threshold) {
     //threshold must be number between 0 and 1
-    visualizeSimulationResultsAtThreshold(threshold);
+    console.log("threshold: ", threshold, "   ", threshold/100);
+    visualizeSimulationResultsAtThreshold(threshold/100);
     this.showResults(true);
 }
 
@@ -348,5 +349,5 @@ App.prototype.attachEvents = function(){
     },0);
   });
 
-  $("#resultSlider").on("input change", function() { console.log($("#resultSlider").val()) });
+  $("#resultSlider").on("input change", function() { window.app.visualizeCurrentModelSimulation($("#resultSlider").val()) });
 }

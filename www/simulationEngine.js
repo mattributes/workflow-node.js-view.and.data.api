@@ -204,13 +204,12 @@ var colorScale = ['rgb(165,0,38)','rgb(215,48,39)','rgb(244,109,67)','rgb(253,17
 
 function colorFromValue(val, min, max, threshold)
 {
-	threshold = threshold || 1.0;
 	var v = (val-min)/(max-min);
 	var res;
 	if(v < threshold){
 		res = new THREE.Color(colorScale[Math.floor(v*numColorBins)]);
 	} else {
-		res = new THREE.Color(1, 1, 1);
+		res = new THREE.Color(0, 0, 0);
 	}
 	return res;
 }
