@@ -1,12 +1,20 @@
 var heatmap_mesh = null;
 var heatmap_mesh_name = "HeatmapMesh";
+var modelData_ = null;
+var simulationResults_ = null;
 
 var runSimulation = function(inj_pts)
 {
-	var modelData = configureSimulation(inj_pts);
-	var res = runSimulationInternal(modelData.pts, modelData.inj_pts);
-	visualizeSimulationResults(modelData.pts, modelData.faces, res);
-	return res;
+	modelData_ = configureSimulation(inj_pts);
+	simulationResults_ = runSimulationInternal(modelData_.pts, modelData_.inj_pts);
+	visualizeSimulationResults(modelData_.pts, modelData_.faces, simulationResults_, 1.0);
+	return simulationResults_;
+}
+
+var visualizeSimulationResultsAtThreshold = function(threshold)
+{
+	visualizeSimulationResults(modelData_.pts, modelData_.faces, 
+		simulationResults_, threshold);
 }
 
 var configureSimulation = function(inj_pts)
@@ -194,14 +202,20 @@ function simulatePointTime(p, inj_pts)
 var numColorBins = 11;
 var colorScale = ['rgb(165,0,38)','rgb(215,48,39)','rgb(244,109,67)','rgb(253,174,97)','rgb(254,224,144)','rgb(255,255,191)','rgb(224,243,248)','rgb(171,217,233)','rgb(116,173,209)','rgb(69,117,180)','rgb(49,54,149)'];
 
-function colorFromValue(val, min, max)
+function colorFromValue(val, min, max, threshold)
 {
+	threshold = threshold || 1.0;
 	var v = (val-min)/(max-min);
-	var res = new THREE.Color(colorScale[Math.floor(v*numColorBins)]);
+	var res;
+	if(v < threshold){
+		res = new THREE.Color(colorScale[Math.floor(v*numColorBins)]);
+	} else {
+		res = new THREE.Color(1, 1, 1);
+	}
 	return res;
 }
 
-function createHeatmapGeometry(pts, faces, res)
+function createHeatmapGeometry(pts, faces, res, time)
 {
 	//var geom = new THREE.SphereGeometry(10, 20);
 	var geom = new THREE.Geometry();
@@ -213,14 +227,18 @@ function createHeatmapGeometry(pts, faces, res)
 
 	for(var i=0; i<faces.length; i++){
 		var face = faces[i].idxs;
-		geom.faces.push( new THREE.Face3( face[0], face[1], face[2],
-											new THREE.Vector3( 0, 0, 1 ),
-											[
-												colorFromValue(res.array[face[0]].result, res.min, res.max),
-												colorFromValue(res.array[face[1]].result, res.min, res.max),
-												colorFromValue(res.array[face[2]].result, res.min, res.max)
-											]
-										)
+		geom.faces.push( 
+			new THREE.Face3( 
+				face[0], 
+				face[1], 
+				face[2],
+				new THREE.Vector3( 0, 0, 1 ),
+				[
+					colorFromValue(res.array[face[0]].result, res.min, res.max, time),
+					colorFromValue(res.array[face[1]].result, res.min, res.max, time),
+					colorFromValue(res.array[face[2]].result, res.min, res.max, time)
+				]
+			)
 		);
 	}
 
@@ -229,7 +247,7 @@ function createHeatmapGeometry(pts, faces, res)
 	return geom;
 }
 
-function visualizeSimulationResults(pts, faces, res)
+function visualizeSimulationResults(pts, faces, res, time)
 {
 	var viewerCanvas = app.getViewerCanvas();
 
@@ -248,7 +266,7 @@ function visualizeSimulationResults(pts, faces, res)
 	
 	viewerCanvas.impl.matman().addMaterial('ADN-Material'+'heatmap', heatmap_material, true);
 
-	var heatmap_geom = createHeatmapGeometry(pts, faces, res);
+	var heatmap_geom = createHeatmapGeometry(pts, faces, res, time);
 
 	removeObjectByName(heatmap_mesh_name);
 

@@ -201,6 +201,12 @@ App.prototype.solveCurrentModel = function() {
     this.showResults(true);
 };
 
+App.prototype.visualizeCurrentModelSimulation = function(threshold) {
+    //threshold must be number between 0 and 1
+    visualizeSimulationResultsAtThreshold(threshold);
+    this.showResults(true);
+}
+
 App.prototype.onLoginCallback = function(href){
    var params = parseQueryString(href);
 
