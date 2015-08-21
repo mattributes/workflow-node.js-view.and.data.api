@@ -62,17 +62,18 @@
 
     </head>
     <body>
-        <header class="row"> 
-            <a href="/" target="_self" class="col-md-10">
+        <header class="navHeader"> 
+            <a href="/" target="_self" class="logo">
                 <img alt="Hackathon – Pseudo Autodesk Simulation Pre-Processor" src="http://static-dc.autodesk.net/etc/designs/v201412151200/autodesk/adsk-design/images/autodesk_header_logo_140x23.png" id="mainLogo">
             </a>
 
-           <div id="navbar" class="navbar-collapse collapse col-md-2">
+           <div id="navbar" class="">
                 <div id="loggedOutNav">
-                    <form class="navbar-form navbar-right" role="form" name="login">
-                        <button id="signIn" type="button" class="btn btn-primary right">Sign in</button>
-                        <button id="signOut" type="button" class="btn btn-primary right">Sign out</button>     
-                    </form>
+                    <!--TODO glyphicon glyphicon-user-->
+                    <div id='CommentNav' class='navItem glyphicon glyphicon glyphicon-comment'></div>
+                    <div id='FilesNav' class='navItem glyphicon glyphicon-floppy-disk'></div>
+                    <button id="signIn" type="button" class="btn btn-primary right">Sign in</button>
+                    <button id="signOut" type="button" class="btn btn-primary right">Sign out</button>
                 </div>
                 <div id="loggedInNav" style="display:none">
                     <form class="navbar-form navbar-right" role="form" name="logout">
@@ -81,35 +82,20 @@
                     </form>
                 </div>
             </div>
-
         </header>
-
         <div id="userContent">
-            <div class="row">
-                <nav id="modelManager" class="col-md-12">
-                    <div id="userFiles"><!-- User name goes here via jQuery --></div>
-                        <input type="file" class="filestyle col-md-2" data-buttonName="btn-primary" data-buttonBefore="true" name="files[]" onchange="onFileSelect(event)">
-                        <button id="uploadbutton" onclick="uploadFile()" class="btn btn-primary action-btn col-md-2">Upload</button>
-                        <div id="modelBrowser" class="col-md-8"></div>
-                    </div>
-                </nav>
+            <!--scene container-->
+            <div id="viewerDiv"></div>
+            <div id="commentPanel" class="">
+                <!-- TODO: comments/notifications here? -->
+                Comments place holder
             </div>
-
-            <div class="row">
-                <div id="commentPanel" class="col-md-2">
-                    <!-- Comments place holder -->
-                </div>
-
-                <!-- Main content - viewer, action and results -->
-                <div id="mainView" class="col-md-10">
-                    <div class="row">
-                        <!-- TODO: takes time to load the model, can we have some feedback =? -->
-                        <div id="viewerDiv"></div>
-                    </div>
-                </div>
+            <div id="FilesDisplay">
+                <input type="file" class="filestyle " data-buttonName="btn-primary" data-buttonBefore="true" name="files[]" onchange="onFileSelect(event)">
+                <button id="uploadbutton" onclick="uploadFile()" class="btn btn-primary action-btn col-md-2">Upload</button>
+                <div id="modelBrowser" class=""></div>
             </div>
         </div>
-
         <div id="loginRequired">
             <h2>Connect your CAD models with browser based injection moulding simulation *</h2>
 

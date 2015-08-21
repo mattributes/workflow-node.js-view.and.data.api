@@ -44,6 +44,8 @@ App.prototype.init = function() {
   if (this._userInfo !== null) {
     this.createUserContent();
   }
+
+  this.attachEvents();
 };
 
 App.prototype.createUserContent = function() {
@@ -213,7 +215,7 @@ App.prototype.onLoginCallback = function(href){
       this._userInfo.oxygenId     = params['openid.alias3.value.alias3'] || '';
       this._userInfo.identityUrl  = params['openid.identity'] || '';
 
-      $("#userContent").css('display', 'inline');
+      $("#userContent").css('display', 'block');
       $("#loginRequired").css('display', 'none');
       this.createUserContent();
 
@@ -293,3 +295,15 @@ App.prototype.loadCommentsForCurrentDocument = function() {
 //App.prototype.commentsCallback = function(dbComment) {
 //  console.log(dbComment);
 //};
+
+App.prototype.attachEvents = function(){
+  $("#FilesNav").on("click", function(){
+    console.log($("FilesDisplay"))
+    $("#FilesDisplay").toggleClass("active");
+  });
+
+  $("#CommentNav").on("click", function(){
+    console.log($("FilesDisplay"))
+    $("#commentPanel").toggleClass("active");
+  });
+}
