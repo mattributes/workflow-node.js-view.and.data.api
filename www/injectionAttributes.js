@@ -88,6 +88,8 @@ var InjectionManager = function(){
     var pointsFound = rayCaster.intersectObjects(objects);
     if (pointsFound.length>0) {
       callback(pointsFound[0]);
+    } else {
+      callback(null);
     }
   };
 
@@ -110,21 +112,22 @@ var InjectionManager = function(){
       viewer.clearSelection();
       self.add(location, viewer);
     });
+  });
 
+  $("#viewerDiv").click(function(e) {
     hitTestForInjectionPoints(e, function(found) {
       if (!found) {
-        this.deselectAllPoints();
+        self.deselectAllPoints();
         return;
       }
-      viewer.clearSelection();
 
+      viewer.clearSelection();
       _(self.injectionPoints).each(function(injectionPoint){
         if (injectionPoint.geomId === found.object.id) {
           injectionPoint.select();
         }
       })
     });
-
   });
 
   //updates cursor when over model
@@ -136,6 +139,17 @@ var InjectionManager = function(){
         return;
       }
       $that.addClass("injectCursor");
+    });
+  });
+
+  $("#viewerDiv").on("mousemove", function(e) {
+    var $that = $(this);
+    hitTestForInjectionPoints(e, function(found) {
+      if (!found) {
+        $that.removeClass("cursorForPointSelection");
+        return;
+      }
+      $that.addClass("cursorForPointSelection");
     });
   });
 
