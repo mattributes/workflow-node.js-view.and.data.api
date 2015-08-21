@@ -44,6 +44,8 @@ App.prototype.init = function() {
   if (this._userInfo !== null) {
     this.createUserContent();
   }
+
+  this.attachEvents();
 };
 
 App.prototype.createUserContent = function() {
@@ -217,6 +219,7 @@ App.prototype.onLoginCallback = function(href){
        // we are signed in
       $('#signIn').css('display', 'none');
       $('#signOut').css('display', 'inline');
+      $('#NavItems').show();
       $('#signOut').html(params['openid.alias3.value.alias1']);
 
       this._userInfo = {};
@@ -225,7 +228,7 @@ App.prototype.onLoginCallback = function(href){
       this._userInfo.oxygenId     = params['openid.alias3.value.alias3'] || '';
       this._userInfo.identityUrl  = params['openid.identity'] || '';
 
-      $("#userContent").css('display', 'inline');
+      $("#userContent").css('display', 'block');
       $("#loginRequired").css('display', 'none');
       this.createUserContent();
 
@@ -244,6 +247,7 @@ App.prototype.signOut = function() {
   Oxygen.signOut();
   this.resetLoginBtn();
   this._userInfo = null;
+  $('#NavItems').hide();
   $("#userContent").css('display', 'none');
   $("#loginRequired").css('display', 'inline');
 };
@@ -308,3 +312,27 @@ App.prototype.loadCommentsForCurrentDocument = function() {
 //App.prototype.commentsCallback = function(dbComment) {
 //  console.log(dbComment);
 //};
+
+App.prototype.attachEvents = function(){
+  $("#FilesNav").on("click", function(){
+    console.log($("FilesDisplay"))
+    $("#FilesDisplay").toggleClass("active");
+  });
+
+  $("#CommentNav").on("click", function(){
+    console.log($("FilesDisplay"))
+    //$("#commentPanel").toggleClass("active");
+    $("#userContent").toggleClass("showComments")
+
+    //hack
+    $("#commentPanel").height($("#viewerDiv").height() - 2);
+  });
+
+  //hack
+  $(window).on("resize", function(){
+    window.setTimeout(function(){
+      //hack
+      $("#commentPanel").height($("#viewerDiv").height() - 2);
+    },0);
+  });
+}

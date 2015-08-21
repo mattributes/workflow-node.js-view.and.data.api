@@ -16,26 +16,81 @@ var configureSimulation = function(inj_pts)
 		faces: [],
 		inj_pts: []
 	}
-	var viewerCanvas = app.getViewerCanvas();
-	var renderProxy = viewerCanvas.impl.getRenderProxy(viewerCanvas.model, 0);
-	var stride = renderProxy.geometry.vbstride;
-	var coords = renderProxy.geometry.vb;
-	var faces = renderProxy.geometry.ib;
 
-	// mesh points
-	var pt_count = 0;
-	for(var i=0; i<coords.length; i=i+stride, pt_count++){
-		res.pts.push({
-			id: pt_count,
-			xyz: [.1*coords[i], .1*coords[i+1], .1*coords[i+2]]
-		})
+	var viewerCanvas = app.getViewerCanvas();
+	var savedVertices = {};
+	var numFragments = viewerCanvas.model.getFragmentList().fragments.length;
+	var prevCount = 0;
+	var uniqueVertexCount = 0;
+
+	function addVertex(idx, pt){
+		if(!savedVertices[idx]){
+			savedVertices[idx] = true;
+			res.pts.push({id: idx, xyz: [pt.x, pt.y, pt.z]});
+			uniqueVertexCount++;
+		}
 	}
 
-	//mesh faces
-	for(i=0; i<faces.length; i=i+3){
-		res.faces.push({
-			idxs: [faces[i], faces[i+1], faces[i+2]]
-		})
+	for(var fragId=0; fragId<numFragments; fragId++){
+
+		uniqueVertexCount = 0;
+
+		var fragProxy = viewerCanvas.impl.getFragmentProxy(viewerCanvas.model, fragId);
+
+		var renderProxy = viewerCanvas.impl.getRenderProxy(viewerCanvas.model, fragId);
+
+		fragProxy.updateAnimTransform();
+
+		var matrix = new THREE.Matrix4();
+		fragProxy.getWorldMatrix(matrix);
+
+		var geometry = renderProxy.geometry;
+
+		var attributes = geometry.attributes;
+
+		var vA = new THREE.Vector3();
+		var vB = new THREE.Vector3();
+		var vC = new THREE.Vector3();
+
+		if (attributes.index !== undefined) {
+
+		  var indices = attributes.index.array || geometry.ib;
+		  var positions = geometry.vb ? geometry.vb : attributes.position.array;
+		  var stride = geometry.vb ? geometry.vbstride : 3;
+		  var offsets = geometry.offsets;
+
+		  if (!offsets || offsets.length === 0) {
+		    offsets = [{start: 0, count: indices.length, index: 0}];
+		  }
+
+		  for (var oi = 0, ol = offsets.length; oi < ol; ++oi) {
+		    var start = offsets[oi].start;
+		    var count = offsets[oi].count;
+		    var index = offsets[oi].index;
+
+		    for (var i = start, il = start + count; i < il; i += 3) {
+				var a = index + indices[i];
+				var b = index + indices[i + 1];
+				var c = index + indices[i + 2];
+
+				vA.fromArray(positions, a * stride);
+				vB.fromArray(positions, b * stride);
+				vC.fromArray(positions, c * stride);
+
+				vA.applyMatrix4(matrix);
+				vB.applyMatrix4(matrix);
+				vC.applyMatrix4(matrix);
+
+				addVertex(prevCount+a, vA);
+				addVertex(prevCount+b, vB);
+				addVertex(prevCount+c, vC);	
+				
+			    //mesh faces
+				res.faces.push({idxs: [prevCount + a, prevCount + b, prevCount + c]});
+		    }
+		    prevCount += uniqueVertexCount;
+		  }
+		}
 	}
 
 	//injection points
@@ -148,8 +203,6 @@ function colorFromValue(val, min, max)
 
 function createHeatmapGeometry(pts, faces, res)
 {
-	console.log("min: ", res.min);
-	console.log("max: ", res.max);
 	//var geom = new THREE.SphereGeometry(10, 20);
 	var geom = new THREE.Geometry();
 
@@ -204,7 +257,7 @@ function visualizeSimulationResults(pts, faces, res)
             heatmap_geom,
             heatmap_material
         );
-    heatmap_mesh.position.set(0, 0, 0);
+    // heatmap_mesh.position.set(0, 0, 0);
     heatmap_mesh.name = heatmap_mesh_name;
 	
 	//adding to LMV
