@@ -32,6 +32,17 @@ $(document).ready(function () {
     $("#mainView").height($(window).height() * 0.75);
 });
 
+// Get the file to upload
+var files = [];
+function onFileSelect(event) {
+    files = event.target.files;
+}
+
+function uploadFile() {
+    window.app.doUploadFiles(files);
+}
+
+
 // The following code does not rely on Autodesk.ADN.Toolkit.Viewer.AdnViewerManager
 // and uses the Autodesk API directly.
 //

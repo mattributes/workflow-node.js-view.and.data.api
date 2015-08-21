@@ -5,6 +5,9 @@ var App = function() {
   this._viewerCanvas = null;
   this._userInfo = null;
   this._tokenurl = 'http://' + window.location.host + '/api/token';
+  this._apiUrl = "https://developer-stg.api.autodesk.com";
+  this._bucketName = "hrlmvhackers_1";
+  this._viewDataClient = null; // The file uploader
   this._config = {
     // environment : 'AutodeskProduction'
     environment : 'AutodeskStaging'
@@ -23,8 +26,80 @@ App.prototype.createUserContent = function() {
     this.loadDocument(App.getAllDocumentUrns()[0]);
 };
 
+// NB: should not need to call this, it is just here to create the bucket the first time, see comment in doUploadFiles to recreate if needed
+App.prototype.createBucket = function() {
+  var bucketCreationData = {
+      bucketKey: this._bucketName,
+      servicesAllowed: {},
+      policyKey: 'transient'
+  }
+
+  this._viewDataClient.createBucketAsync(bucketCreationData, function (response) {
+    //onSuccess
+    console.log('Bucket creation successful:');
+    console.log(response);
+  },
+  function (error) {
+    //onError
+    console.log('Bucket creation failed:');
+    console.log(error);
+    console.log('Exiting ...');
+  });
+}
+
+App.prototype.doUploadFiles = function(files) {
+  var self = this;
+
+  self._viewDataClient = new Autodesk.ADN.Toolkit.ViewAndData.ViewAndDataClient(self._apiUrl, this._tokenurl);
+  self._viewDataClient.onInitialized(function() {
+
+    // Uncomment this to recreate the bucket if needed
+    //self.createBucket();
+
+    for(var i = 0; i < files.length; ++i) {
+        var file = files[i];
+        self._viewDataClient.uploadFileAsync(file, self._bucketName, file.name, function(response) {
+          var fileId = response.objectId;
+          var registerResponse = self._viewDataClient.register(fileId);
+
+          console.log(fileId);
+          console.log(registerResponse);
+
+          if (registerResponse.Result !== "Success" && registerResponse.Result !== "Created") {
+              alert("Sorry old chap, we couldn't upload that document");
+              return;
+          }
+
+          var timer = setInterval(function() {
+              self._viewDataClient.getViewableAsync(fileId, function(response) {
+                      console.log(response.progress);
+                      if (response.progress === "complete") {
+                          clearInterval(timer);
+                          console.log("response.urn= ",response.urn);
+                          console.log(file.name);
+
+                          // TODO: update client UI
+                          //sendNotification(response.urn, file.name);
+                      }
+              });
+
+          }, 2000);
+      },
+      function(err) {
+          console.log(err);
+      });
+    }
+})
+
+
+};
+
 App.getAllDocumentUrns = function() {
   return [
+  // NB: these are docs Dylan uploaded via the app - but can't be rendered. WIP/TODO:
+  // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvbW1fcmFjZXRyYWNrLnN0bA==',
+
+  // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvRHVzdHBhbi5zdGw=',
     // MF card holder, "shell_1_of_mfx_card_holder.stl"
     'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs',
 
@@ -125,6 +200,9 @@ App.prototype.onLoginCallback = function(href){
       $("#userContent").css('display', 'inline');
       $("#loginRequired").css('display', 'none');
       this.createUserContent();
+
+      var msg = this._userInfo.name + "'s models";
+      $("#userFiles").html(msg);
    }
 
    Oxygen.hide();

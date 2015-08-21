@@ -26,7 +26,7 @@
         <!-- jquery -->
         <script src="https://code.jquery.com/jquery-2.1.2.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
+        <script type="text/javascript" src="bower_components/bootstrap-filestyle/src/bootstrap-filestyle.js"></script>
         <!-- Viewer staging -->
         <link type="text/css" rel="stylesheet" href="https://developer-stg.api.autodesk.com/viewingservice/v1/viewers/style.css"/>
         <script src="https://developer-stg.api.autodesk.com/viewingservice/v1/viewers/viewer3D.js"></script>
@@ -50,9 +50,11 @@
         <script type="text/jsx" src="/models.js"></script>
         <script src="/index.js"></script>
         <script src="oxygen_plugin.js"></script>
+        <script src="view-and-data-client.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+
         <link rel="stylesheet" type="text/css" href="css/main.css" />
         <link rel="stylesheet" type="text/css" href="css/panel.css" />
 
@@ -82,9 +84,12 @@
 
         <div id="userContent">
             <div class="row">
-                <nav id="modelBrowser" class="placeholder col-md-12">
-                    <!-- TODO: pick your model / upload a new one here? -->
-                    Model selector / uploader place holder
+                <nav id="modelManager" class="col-md-12">
+                    <div id="userFiles"><!-- User name goes here via jQuery --></div>
+                        <input type="file" class="filestyle col-md-2" data-buttonName="btn-primary" data-buttonBefore="true" name="files[]" onchange="onFileSelect(event)">
+                        <button id="uploadbutton" onclick="uploadFile()" class="btn btn-primary action-btn col-md-2">Upload</button>
+                        <div id="modelBrowser" class="col-md-8"></div>
+                    </div>
                 </nav>
             </div>
 

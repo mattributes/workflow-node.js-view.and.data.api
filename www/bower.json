@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "underscore": "~1.8.3",
-    "bootstrap": "~3.3.5"
+    "bootstrap": "~3.3.5",
+    "bootstrap-filestyle": "~1.2.1"
   }
 }
