@@ -77,6 +77,7 @@ var InjectionManager = function(){
       if (!location) {
         return;
       }
+      viewer.clearSelection();
       self.add(location, viewer);
     });
   });
