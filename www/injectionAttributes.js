@@ -63,10 +63,12 @@ var InjectionManager = function(){
   var viewer = app.getViewerCanvas();
 
   var hitTestWithEvent = function(e, callback) {
-    var x = e.offsetX/viewer.container.offsetWidth;
-    var y = e.offsetY/viewer.container.offsetHeight;
-    var location = viewer.utilities.getHitPoint(x, y);
-    callback(location);
+    if (Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.isOpen){
+      var x = e.offsetX/viewer.container.offsetWidth;
+      var y = e.offsetY/viewer.container.offsetHeight;
+      var location = viewer.utilities.getHitPoint(x, y);
+      callback(location);
+    }
   };
 
   var self = this;

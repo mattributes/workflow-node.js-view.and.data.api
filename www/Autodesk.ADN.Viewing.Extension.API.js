@@ -10,8 +10,6 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
   var _panel = null;
 
-  var isOpen = false;
-
   var resultsVisible = true;
 
   /////////////////////////////////////////////
@@ -151,9 +149,8 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   /////////////////////////////////////////////
   function onShowPanel() {
 
-    isOpen = !isOpen
-
-    _panel.setVisible(isOpen);
+    _panel.isOpen = !_panel.isOpen //toggle
+    _panel.setVisible(_panel.isOpen);
   }
 
   /////////////////////////////////////////////
@@ -223,6 +220,8 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     this.content.id = baseId + 'PanelContentId';
     this.content.className = 'uicomponent-panel-content';
+
+    this._isOpen = false;
 
     Autodesk.Viewing.UI.DockingPanel.call(
       this,
@@ -384,6 +383,12 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     this.closer = this.createCloseButton();
 
+    var self = this;
+
+    $(this.closer).on("click", function(){
+      self.isOpen = false;
+    });
+
     this.container.appendChild(this.title);
     this.title.appendChild(this.closer);
 
@@ -472,8 +477,6 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
       'margin-top: -6px;',
       'margin-left: -6px;',
     '}'
-
-    
 
   ].join('\n');
 
