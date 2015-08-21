@@ -422,6 +422,7 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
 
     $(this.closer).on("click", function(){
       self.isOpen = false;
+      //set deactive
     });
 
     this.container.appendChild(this.title);
