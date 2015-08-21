@@ -11,23 +11,165 @@ var runSimulation = function(inj_pts)
 
 var configureSimulation = function(inj_pts)
 {
+	var scaleFactor = 1;
+	var unitsScale = app.getViewerCanvas().model.getUnitScale();
+	if(unitsScale !== 1){ //if units are known
+		scaleFactor = 10*unitsScale;
+	}
+
 	var res = {
 		pts: [],
 		faces: [],
 		inj_pts: []
 	}
-	var viewerCanvas = app.getViewerCanvas();
-	var renderProxy = viewerCanvas.impl.getRenderProxy(viewerCanvas.model, 0);
-	var stride = renderProxy.geometry.vbstride;
-	var coords = renderProxy.geometry.vb;
-	var faces = renderProxy.geometry.ib;
 
+	var viewerCanvas = app.getViewerCanvas();
+
+
+
+
+
+	// var fragProxy = viewer.impl.getFragmentProxy(viewerCanvas.model, 0);
+	// var renderProxy = viewerCanvas.impl.getRenderProxy(viewerCanvas.model, 0);
+	// var matrix = new THREE.Matrix4();
+ //    fragProxy.getWorldMatrix(matrix);
+
+	// var stride = renderProxy.geometry.vbstride;
+	// var coords = renderProxy.geometry.vb;
+	// var faces = renderProxy.geometry.ib;
+
+	var savedVertices = {};
+
+	var fragId = 0;
+
+	var fragProxy = viewerCanvas.impl.getFragmentProxy(
+	  viewerCanvas.model,
+	  fragId);
+
+	var renderProxy = viewerCanvas.impl.getRenderProxy(
+	  viewerCanvas.model,
+	  fragId);
+
+	fragProxy.updateAnimTransform();
+
+	var matrix = new THREE.Matrix4();
+	fragProxy.getWorldMatrix(matrix);
+
+	var geometry = renderProxy.geometry;
+
+	var attributes = geometry.attributes;
+
+	var vA = new THREE.Vector3();
+	var vB = new THREE.Vector3();
+	var vC = new THREE.Vector3();
+
+	if (attributes.index !== undefined) {
+
+	  var indices = attributes.index.array || geometry.ib;
+	  var positions = geometry.vb ? geometry.vb : attributes.position.array;
+	  var stride = geometry.vb ? geometry.vbstride : 3;
+	  var offsets = geometry.offsets;
+
+	  if (!offsets || offsets.length === 0) {
+
+	    offsets = [{start: 0, count: indices.length, index: 0}];
+	  }
+
+	  for (var oi = 0, ol = offsets.length; oi < ol; ++oi) {
+
+	    var start = offsets[oi].start;
+	    var count = offsets[oi].count;
+	    var index = offsets[oi].index;
+
+	    for (var i = start, il = start + count; i < il; i += 3) {
+
+	      var a = index + indices[i];
+	      var b = index + indices[i + 1];
+	      var c = index + indices[i + 2];
+
+	      vA.fromArray(positions, a * stride);
+	      vB.fromArray(positions, b * stride);
+	      vC.fromArray(positions, c * stride);
+
+	      vA.applyMatrix4(matrix);
+	      vB.applyMatrix4(matrix);
+	      vC.applyMatrix4(matrix);
+
+	      // drawVertex (vA, 0.05);
+	      // drawVertex (vB, 0.05);
+	      // drawVertex (vC, 0.05);
+
+	      // drawLine(vA, vB);
+	      // drawLine(vB, vC);
+	      // drawLine(vC, vA);
+	      if(!savedVertices[a]){
+	      	savedVertices[a] = true;
+	      	res.pts.push({id: a, xyz: [vA.x, vA.y, vA.z]});
+	      }
+	      if(!savedVertices[b]){
+	      	savedVertices[b] = true;
+	      	res.pts.push({id: b, xyz: [vB.x, vB.y, vB.z]});
+	      }
+	      if(!savedVertices[c]){
+	      	savedVertices[c] = true;
+	      	res.pts.push({id: c, xyz: [vC.x, vC.y, vC.z]});
+	      }
+		    
+		    //mesh faces
+			res.faces.push({idxs: [a, b, c]});
+	    }
+	  }
+	}
+	else {
+
+	  var positions = geometry.vb ? geometry.vb : attributes.position.array;
+	  var stride = geometry.vb ? geometry.vbstride : 3;
+
+	  for (var i = 0, j = 0, il = positions.length; i < il; i += 3, j += 9) {
+
+	    var a = i;
+	    var b = i + 1;
+	    var c = i + 2;
+
+	    vA.fromArray(positions, a * stride);
+	    vB.fromArray(positions, b * stride);
+	    vC.fromArray(positions, c * stride);
+
+	    vA.applyMatrix4(matrix);
+	    vB.applyMatrix4(matrix);
+	    vC.applyMatrix4(matrix);
+
+	    drawVertex (vA, 0.05);
+	    drawVertex (vB, 0.05);
+	    drawVertex (vC, 0.05);
+
+	    drawLine(vA, vB);
+	    drawLine(vB, vC);
+	    drawLine(vC, vA);
+	  }
+	}
+
+
+
+
+
+
+
+
+
+
+
+/*
 	// mesh points
 	var pt_count = 0;
 	for(var i=0; i<coords.length; i=i+stride, pt_count++){
 		res.pts.push({
 			id: pt_count,
-			xyz: [.1*coords[i], .1*coords[i+1], .1*coords[i+2]]
+			xyz: [
+				scaleFactor*coords[i], 
+				scaleFactor*coords[i+1], 
+				scaleFactor*coords[i+2]
+			]
 		})
 	}
 
@@ -37,6 +179,7 @@ var configureSimulation = function(inj_pts)
 			idxs: [faces[i], faces[i+1], faces[i+2]]
 		})
 	}
+*/
 
 	//injection points
 	for(var i=0; i<inj_pts.length; i++){
@@ -204,7 +347,7 @@ function visualizeSimulationResults(pts, faces, res)
             heatmap_geom,
             heatmap_material
         );
-    heatmap_mesh.position.set(0, 0, 0);
+    // heatmap_mesh.position.set(0, 0, 0);
     heatmap_mesh.name = heatmap_mesh_name;
 	
 	//adding to LMV
