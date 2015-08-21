@@ -26,10 +26,10 @@ $(document).ready(function () {
     Oxygen.checkImmediate();
 
     $(window).resize(function() {
-        $("#mainView").height($(window).height() * 0.75);
+        $("#mainView").height($(window).height() * 0.65);
     });
 
-    $("#mainView").height($(window).height() * 0.75);
+    $("#mainView").height($(window).height() * 0.65);
 });
 
 // Get the file to upload
