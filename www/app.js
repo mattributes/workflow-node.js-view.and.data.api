@@ -140,7 +140,7 @@ App.prototype.initViewerCanvas = function() {
 
   var viewerCanvas = new Autodesk.Viewing.Private.GuiViewer3D($('#viewerDiv')[0], {
     viewerType: 'GuiViewer3D',
-    extensions: ['Autodesk.ADN.Viewing.Extension.UIComponent']
+    extensions: ['Autodesk.ADN.Viewing.Extension.UIComponent', 'Autodesk.ADN.Viewing.Extension.Move']
   });
 
   viewerCanvas.start();
