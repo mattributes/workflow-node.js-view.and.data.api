@@ -27,7 +27,7 @@ var configureSimulation = function(inj_pts)
 	for(var i=0; i<coords.length; i=i+stride, pt_count++){
 		res.pts.push({
 			id: pt_count,
-			xyz: [.11*coords[i], .11*coords[i+1], .11*coords[i+2]]
+			xyz: [.1*coords[i], .1*coords[i+1], .1*coords[i+2]]
 		})
 	}
 

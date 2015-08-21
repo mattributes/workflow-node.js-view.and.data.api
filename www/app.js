@@ -98,6 +98,7 @@ App.prototype.loadDocument = function(urn) {
 App.prototype.solveCurrentModel = function() {
     var injection_pts = this.getInjectionManager().getInjectionPointsLocation();
     runSimulation(injection_pts);
+    this.showResults(true);
 };
 
 App.prototype.onLoginCallback = function(href){
@@ -152,8 +153,9 @@ App.prototype.resetLoginBtn = function() {
 };
 
 App.prototype.showResults = function(flag) {
+  app.getViewerCanvas().model.setHighlighted(0, false);
+  app.getViewerCanvas().model.setAllVisibility(!flag);
   showSimulationResults(flag);
 }
-
 
 
