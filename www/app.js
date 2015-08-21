@@ -96,7 +96,7 @@ App.prototype.loadDocument = function(urn) {
 };
 
 App.prototype.solveCurrentModel = function() {
-    var injection_pts = this.getInjectionManager().getInjectionPointsLocation();
+    var injection_pts = this.getInjectionManager().getInjectionPoints();
     runSimulation(injection_pts);
     this.showResults(true);
 };

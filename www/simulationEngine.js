@@ -43,7 +43,9 @@ var configureSimulation = function(inj_pts)
 		res.inj_pts.push(
 			{
 				id: i,
-				xyz: [inj_pts[i].x, inj_pts[i].y, inj_pts[i].z]
+				xyz: [inj_pts[i].location.x, inj_pts[i].location.y, inj_pts[i].location.z],
+				temperature: inj_pts[i].temperature,
+				velocity: inj_pts[i].velocity
 			});
 	}
 
@@ -79,12 +81,17 @@ function pointToPointDistance3DSquared(p, q)
 	return (Math.pow(p[0] - q[0], 2) + Math.pow(p[1] - q[1], 2) + Math.pow(p[2] - q[2], 2));
 }
 
+function ptToInjPtDistanceFunction(p, inj_p)
+{
+	return pointToPointDistance3DSquared(p.xyz, inj_p.xyz) / inj_p.velocity;
+}
+
 function getClosestInjectionPoint(p, inj_p)
 {
 	var min_dist = Infinity; 
 	var closest_id = -1;
 	for(var i=0; i<inj_p.length; i++){
-		var d = pointToPointDistance3DSquared(p.xyz, inj_p[i].xyz);
+		var d = ptToInjPtDistanceFunction(p, inj_p[i]);
 		if(d < min_dist){
 			closest_id = inj_p[i].id;
 			min_dist = d;
@@ -123,7 +130,8 @@ function simulatePointTime(p, inj_pts)
 	var res = Infinity;
 	var closest_inj_pt_id = getClosestInjectionPoint(p, inj_pts);
 	if(closest_inj_pt_id != -1){
-		res = pointToPointDistance3D(p.xyz, inj_pts[closest_inj_pt_id].xyz);
+		// res = pointToPointDistance3D(p.xyz, inj_pts[closest_inj_pt_id].xyz);
+		res = ptToInjPtDistanceFunction(p, inj_pts[closest_inj_pt_id]);
 	}
 	return res;
 }	

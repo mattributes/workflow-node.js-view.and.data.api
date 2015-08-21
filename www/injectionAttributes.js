@@ -149,3 +149,9 @@ InjectionManager.prototype.getInjectionPointsLocation = function()
   } 
   return res;
 }
+
+InjectionManager.prototype.getInjectionPoints = function()
+{
+  return this.injectionPoints;
+}
+
