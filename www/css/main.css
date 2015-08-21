@@ -70,10 +70,16 @@ header .navItem.active{
   position:absolute;
   left:0px;
   top:50px;
+  width:350px;
+  border:solid 1px #f5f5f5;
 }
 
-#commentPanel.active{
+.showComments #commentPanel{
   display:block;
+}
+
+.showComments #viewerDiv{
+  left:350px;
 }
 
 #viewerDiv{

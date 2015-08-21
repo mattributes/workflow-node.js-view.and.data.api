@@ -304,6 +304,18 @@ App.prototype.attachEvents = function(){
 
   $("#CommentNav").on("click", function(){
     console.log($("FilesDisplay"))
-    $("#commentPanel").toggleClass("active");
+    //$("#commentPanel").toggleClass("active");
+    $("#userContent").toggleClass("showComments")
+
+    //hack
+    $("#commentPanel").height($("#viewerDiv").height() - 2);
+  });
+
+  //hack
+  $(window).on("resize", function(){
+    window.setTimeout(function(){
+      //hack
+      $("#commentPanel").height($("#viewerDiv").height() - 2);
+    },0);
   });
 }
