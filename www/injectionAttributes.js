@@ -45,6 +45,12 @@ InjectionPoint.prototype.select = function(){
   app._injectionManager.deselectAllPoints();
   app.getGeomKeeper().getGeometry(this.geomId).material.color.setHex( 0xff0000 );
   app.invalidate();
+
+  //when selecting a point - show panel
+  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.deselectAll();
+  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.setVisible(true);
+  //hack!
+  this.uiContainer.addClass("active");
 }
 
 InjectionPoint.prototype.deselect = function(){
