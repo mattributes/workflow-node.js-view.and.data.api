@@ -13,6 +13,29 @@ var App = function() {
     // environment : 'AutodeskProduction'
     environment : 'AutodeskStaging'
   };
+  this._knownModels = [
+    // Bike (3DS)
+    'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvTW90dG8uM2Rz',
+    // Piece die (STL)
+    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvcGVhY2UuU1RM",
+    // Chopper (OBJ)
+    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvdWg2MC5vYmo=",
+    // 707.3ds
+    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvNzA3LjNEUw==",
+    // NB: these are docs Dylan uploaded via the app - but can't be rendered. WIP/TODO:, both are STL's...
+    // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvbW1fcmFjZXRyYWNrLnN0bA==',
+    // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvRHVzdHBhbi5zdGw=',
+    // MF card holder, "shell_1_of_mfx_card_holder.stl"
+    'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs',
+    // plate20x20x2-5.STL
+    'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTIwLTE2LTQ2LTA1LXR1dnI2cGVzZjd3YWtncG13dXF0aHZ3dXEzc3IvcGxhdGUyMHgyMHgyLTUuU1RM'
+    // // Name/description of model
+    // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs',
+    // // Name/description of model
+    // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs',
+    // // Name/description of model
+    // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs'
+  ];
 };
 
 App.prototype.init = function() {
@@ -23,7 +46,7 @@ App.prototype.init = function() {
 
 App.prototype.createUserContent = function() {
     this._viewerFactory = new Autodesk.ADN.Toolkit.Viewer.AdnViewerFactory(this._tokenurl, this._config);
-    this.loadDocument(App.getAllDocumentUrns()[0]);
+    this.loadDocument(this.getAllDocumentUrns()[0]);
 };
 
 // NB: should not need to call this, it is just here to create the bucket the first time, see comment in doUploadFiles to recreate if needed
@@ -80,51 +103,21 @@ App.prototype.doUploadFiles = function(files) {
 
                           // TODO: update client UI
                           //sendNotification(response.urn, file.name);
+                          self._knownModels.push(response.urn);
+                          reGenerateModelsDom();
                       }
               });
-
           }, 2000);
       },
       function(err) {
           console.log(err);
       });
     }
-})
-
-
+  })
 };
 
-App.getAllDocumentUrns = function() {
-  return [
-
-    // Piece die (STL)
-    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvcGVhY2UuU1RM",
-    
-    // Chopper (OBJ)
-    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvdWg2MC5vYmo=",
-
-    // 707.3ds
-    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvNzA3LjNEUw==",
-
-  // NB: these are docs Dylan uploaded via the app - but can't be rendered. WIP/TODO:, both are STL's...
-  // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvbW1fcmFjZXRyYWNrLnN0bA==',
-
-  // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvRHVzdHBhbi5zdGw=',
-    // MF card holder, "shell_1_of_mfx_card_holder.stl"
-    'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs',
-
-    // plate20x20x2-5.STL
-    'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTIwLTE2LTQ2LTA1LXR1dnI2cGVzZjd3YWtncG13dXF0aHZ3dXEzc3IvcGxhdGUyMHgyMHgyLTUuU1RM'
-
-    // // Name/description of model
-    // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs',
-
-    // // Name/description of model
-    // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs',
-
-    // // Name/description of model
-    // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs'
-  ];
+App.prototype.getAllDocumentUrns = function() {
+  return this._knownModels;
 };
 
 App.prototype.getCurrentDocumentUrn = function() {
