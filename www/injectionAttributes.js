@@ -32,7 +32,7 @@ InjectionPoint.prototype.createGeometry = function(viewer) {
 };
 
 InjectionPoint.prototype.setTemperature = function(val){
-  this.tempereature = val;
+  this.temperature = val;
 }
 
 InjectionPoint.prototype.setVelocity = function(val){

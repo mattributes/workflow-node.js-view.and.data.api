@@ -83,7 +83,7 @@ function pointToPointDistance3DSquared(p, q)
 
 function ptToInjPtDistanceFunction(p, inj_p)
 {
-	return pointToPointDistance3DSquared(p.xyz, inj_p.xyz) / inj_p.velocity;
+	return pointToPointDistance3DSquared(p.xyz, inj_p.xyz) / inj_p.temperature;
 }
 
 function getClosestInjectionPoint(p, inj_p)
