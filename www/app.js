@@ -347,4 +347,6 @@ App.prototype.attachEvents = function(){
       $("#commentPanel").height($("#viewerDiv").height() - 2);
     },0);
   });
+
+  $("#resultSlider").on("input change", function() { console.log($("#resultSlider").val()) });
 }

@@ -58,18 +58,20 @@ Autodesk.ADN.Viewing.Extension.Move = function (viewer, options) {
     }
 
     function cancel() {
-
         $(viewer.container).unbind(
-            "click",
-            onMouseClickInit);
+            "mousemove",
+            onMouseMove);
 
         $(viewer.container).unbind(
             "click",
             onMouseClickEnd);
 
-        $(viewer.container).unbind(
-            "mousemove",
-            onMouseMove);
+        $(viewer.container).bind(
+            "click",
+            onMouseClickInit);
+
+        var location = _oldLocation;
+        point.position.set(location.x, location.y, location.z);
 
         _selectedGeomId = -1;
 

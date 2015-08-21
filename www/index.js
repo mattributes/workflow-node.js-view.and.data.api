@@ -24,15 +24,6 @@ $(document).ready(function () {
     $('#signIn2').click(function(){ app.signIn(); });
     $('#signOut').click(function(){ app.signOut(); });
     Oxygen.checkImmediate();
-
-    /*var fudgeFactor = 0.65;
-    $(window).resize(function() {
-        $("#mainView").height($(window).height() * fudgeFactor);
-        $("#commentPanel").height($(window).height() * fudgeFactor);   
-    });
-
-    $("#mainView").height($(window).height() * fudgeFactor);
-    $("#commentPanel").height($(window).height() * fudgeFactor);*/
 });
 
 // Get the file to upload
