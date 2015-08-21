@@ -200,8 +200,7 @@ function visualizeSimulationResults(pts, faces, res)
     heatmap_mesh.name = heatmap_mesh_name;
 	
 	//adding to LMV
-	viewerCanvas.impl.scene.add(heatmap_mesh);   
-	viewerCanvas.impl.invalidate(true);
+	app.getGeomKeeper().addGeometry(heatmap_mesh);
 }
 
 function removeObjectByName(name)
