@@ -7,7 +7,7 @@ var App = function() {
   this._userInfo = null;
   this._tokenurl = 'http://' + window.location.host + '/api/token';
   this._apiUrl = "https://developer-stg.api.autodesk.com";
-  this._bucketName = "hrlmvhackers_1";
+  this._bucketName = "hrlmvhackers_2";
   this._viewDataClient = null; // The file uploader
   this._config = {
     // environment : 'AutodeskProduction'
@@ -22,6 +22,8 @@ var App = function() {
     "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvdWg2MC5vYmo=",
     // 707.3ds
     "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvNzA3LjNEUw==",
+    // Chair:
+    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzIvY2hhaXJfZnJvbUlQVC5zYXQ=",
     // NB: these are docs Dylan uploaded via the app - but can't be rendered. WIP/TODO:, both are STL's...
     // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvbW1fcmFjZXRyYWNrLnN0bA==',
     // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvRHVzdHBhbi5zdGw=',
