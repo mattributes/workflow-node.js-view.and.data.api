@@ -11,12 +11,6 @@ var runSimulation = function(inj_pts)
 
 var configureSimulation = function(inj_pts)
 {
-	var scaleFactor = 1;
-	var unitsScale = app.getViewerCanvas().model.getUnitScale();
-	if(unitsScale !== 1){ //if units are known
-		scaleFactor = 10*unitsScale;
-	}
-
 	var res = {
 		pts: [],
 		faces: [],
@@ -24,24 +18,26 @@ var configureSimulation = function(inj_pts)
 	}
 
 	var viewerCanvas = app.getViewerCanvas();
-
 	var savedVertices = {};
-
 	var numFragments = viewerCanvas.model.getFragmentList().fragments.length;
-
 	var prevCount = 0;
+	var uniqueVertexCount = 0;
+
+	function addVertex(idx, pt){
+		if(!savedVertices[idx]){
+			savedVertices[idx] = true;
+			res.pts.push({id: idx, xyz: [pt.x, pt.y, pt.z]});
+			uniqueVertexCount++;
+		}
+	}
 
 	for(var fragId=0; fragId<numFragments; fragId++){
 
-		var uniqueVertexCount = 0;
+		uniqueVertexCount = 0;
 
-		var fragProxy = viewerCanvas.impl.getFragmentProxy(
-		  viewerCanvas.model,
-		  fragId);
+		var fragProxy = viewerCanvas.impl.getFragmentProxy(viewerCanvas.model, fragId);
 
-		var renderProxy = viewerCanvas.impl.getRenderProxy(
-		  viewerCanvas.model,
-		  fragId);
+		var renderProxy = viewerCanvas.impl.getRenderProxy(viewerCanvas.model, fragId);
 
 		fragProxy.updateAnimTransform();
 
@@ -64,91 +60,38 @@ var configureSimulation = function(inj_pts)
 		  var offsets = geometry.offsets;
 
 		  if (!offsets || offsets.length === 0) {
-
 		    offsets = [{start: 0, count: indices.length, index: 0}];
 		  }
 
 		  for (var oi = 0, ol = offsets.length; oi < ol; ++oi) {
-
 		    var start = offsets[oi].start;
 		    var count = offsets[oi].count;
 		    var index = offsets[oi].index;
 
 		    for (var i = start, il = start + count; i < il; i += 3) {
+				var a = index + indices[i];
+				var b = index + indices[i + 1];
+				var c = index + indices[i + 2];
 
-		      var a = index + indices[i];
-		      var b = index + indices[i + 1];
-		      var c = index + indices[i + 2];
+				vA.fromArray(positions, a * stride);
+				vB.fromArray(positions, b * stride);
+				vC.fromArray(positions, c * stride);
 
-		      vA.fromArray(positions, a * stride);
-		      vB.fromArray(positions, b * stride);
-		      vC.fromArray(positions, c * stride);
+				vA.applyMatrix4(matrix);
+				vB.applyMatrix4(matrix);
+				vC.applyMatrix4(matrix);
 
-		      vA.applyMatrix4(matrix);
-		      vB.applyMatrix4(matrix);
-		      vC.applyMatrix4(matrix);
-
-		      // drawVertex (vA, 0.05);
-		      // drawVertex (vB, 0.05);
-		      // drawVertex (vC, 0.05);
-
-		      // drawLine(vA, vB);
-		      // drawLine(vB, vC);
-		      // drawLine(vC, vA);
-		      if(!savedVertices[prevCount + a]){
-		      	savedVertices[prevCount + a] = true;
-		      	res.pts.push({id: prevCount + a, xyz: [vA.x, vA.y, vA.z]});
-		      	uniqueVertexCount++;
-		      }
-		      if(!savedVertices[prevCount + b]){
-		      	savedVertices[prevCount + b] = true;
-		      	res.pts.push({id: prevCount + b, xyz: [vB.x, vB.y, vB.z]});
-		      	uniqueVertexCount++;
-		      }
-		      if(!savedVertices[prevCount + c]){
-		      	savedVertices[prevCount + c] = true;
-		      	res.pts.push({id: prevCount + c, xyz: [vC.x, vC.y, vC.z]});
-		      	uniqueVertexCount++;
-		      }
-			    
+				addVertex(prevCount+a, vA);
+				addVertex(prevCount+b, vB);
+				addVertex(prevCount+c, vC);	
+				
 			    //mesh faces
 				res.faces.push({idxs: [prevCount + a, prevCount + b, prevCount + c]});
 		    }
 		    prevCount += uniqueVertexCount;
 		  }
 		}
-		else {
-
-		  var positions = geometry.vb ? geometry.vb : attributes.position.array;
-		  var stride = geometry.vb ? geometry.vbstride : 3;
-
-		  for (var i = 0, j = 0, il = positions.length; i < il; i += 3, j += 9) {
-
-		    var a = i;
-		    var b = i + 1;
-		    var c = i + 2;
-
-		    vA.fromArray(positions, a * stride);
-		    vB.fromArray(positions, b * stride);
-		    vC.fromArray(positions, c * stride);
-
-		    vA.applyMatrix4(matrix);
-		    vB.applyMatrix4(matrix);
-		    vC.applyMatrix4(matrix);
-
-		    drawVertex (vA, 0.05);
-		    drawVertex (vB, 0.05);
-		    drawVertex (vC, 0.05);
-
-		    drawLine(vA, vB);
-		    drawLine(vB, vC);
-		    drawLine(vC, vA);
-		  }
-		}
 	}
-
-
-
 
 	//injection points
 	for(var i=0; i<inj_pts.length; i++){
@@ -260,8 +203,6 @@ function colorFromValue(val, min, max)
 
 function createHeatmapGeometry(pts, faces, res)
 {
-	console.log("min: ", res.min);
-	console.log("max: ", res.max);
 	//var geom = new THREE.SphereGeometry(10, 20);
 	var geom = new THREE.Geometry();
 
