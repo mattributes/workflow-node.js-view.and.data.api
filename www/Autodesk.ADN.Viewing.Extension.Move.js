@@ -60,16 +60,16 @@ Autodesk.ADN.Viewing.Extension.Move = function (viewer, options) {
     function cancel() {
 
         $(viewer.container).unbind(
-          "click",
-          onMouseClickInit);
+            "click",
+            onMouseClickInit);
 
         $(viewer.container).unbind(
-          "click",
-          onMouseClickEnd);
+            "click",
+            onMouseClickEnd);
 
         $(viewer.container).unbind(
-          "mousemove",
-          onMouseMove);
+            "mousemove",
+            onMouseMove);
 
         _selectedGeomId = -1;
 
@@ -153,6 +153,8 @@ Autodesk.ADN.Viewing.Extension.Move = function (viewer, options) {
                 location = _oldLocation;
             }
             point.position.set(location.x, location.y, location.z);
+            app.invalidate();
+            app.modelChanged();
         });
     }
 
@@ -170,14 +172,15 @@ Autodesk.ADN.Viewing.Extension.Move = function (viewer, options) {
             "click",
             onMouseClickEnd);
 
-        handleEventAndTry(event);
+        $(viewer.container).bind(
+            "click",
+            onMouseClickInit);
 
-        app.invalidate();
+        handleEventAndTry(event);
     };
 
     function onMouseMove(event) {
         handleEventAndTry(event);
-        app.invalidate();
     };
 
 };
