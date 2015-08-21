@@ -162,6 +162,10 @@ App.prototype.getViewerCanvas = function() {
   return this.initViewerCanvas();
 };
 
+App.prototype.invalidate = function() {
+  this.getViewerCanvas().impl.invalidate(true, false, true);
+}
+
 App.prototype.loadDocument = function(urn) {
   var self = this;
   this._viewerFactory.getViewablePath(urn, function(pathInfoCollection) {

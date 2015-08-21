@@ -17,12 +17,12 @@ GeomKeeper.prototype._reset = function() {
   });
   this._geoms = {};
   this._next = 0;
-  app.getViewerCanvas().impl.invalidate(true);
+  app.invalidate();
 };
 
 GeomKeeper.prototype.addGeometry = function(geom) {
   app.getViewerCanvas().impl.scene.add(geom);
-  app.getViewerCanvas().impl.invalidate(true);
+  app.invalidate();
   this._geoms[this._next] = geom;
   return this._next++;
 };
@@ -40,6 +40,6 @@ GeomKeeper.prototype.getGeometry = function(idx) {
 GeomKeeper.prototype.removeGeometry = function(idx) {
   geom = this.getGeometry(idx);
   app.getViewerCanvas().impl.scene.remove(geom);
-  app.getViewerCanvas().impl.invalidate(true);
+  app.invalidate();
   delete this._geoms[idx];
 };

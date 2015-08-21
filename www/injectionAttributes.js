@@ -44,12 +44,12 @@ InjectionPoint.prototype.select = function(){
   //when selecting a point, deselect all other points.
   app._injectionManager.deselectAllPoints();
   app.getGeomKeeper().getGeometry(this.geomId).material.color.setHex( 0xff0000 );
-  app.getViewerCanvas().impl.invalidate(true);
+  app.invalidate();
 }
 
 InjectionPoint.prototype.deselect = function(){
   app.getGeomKeeper().getGeometry(this.geomId).material.color.setHex( 0xffffff );
-  app.getViewerCanvas().impl.invalidate(true);
+  app.invalidate();
 }
 
 InjectionPoint.prototype.delete = function(){

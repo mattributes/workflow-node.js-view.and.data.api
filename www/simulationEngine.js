@@ -67,7 +67,7 @@ var showSimulationResults = function(flag)
 	var mesh = getObjectByName(heatmap_mesh_name);
 	if(mesh){
 		mesh.visible = flag;
-		app.getViewerCanvas().impl.invalidate(true);
+		app.invalidate();
 	}
 }
 
