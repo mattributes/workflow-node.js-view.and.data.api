@@ -245,7 +245,6 @@ header .navItem.active{
 
 #resultSlider{
   position:absolute;
-  bottom:100px;
-  left:200px;
   width:200px;
+  z-index:200;
 }

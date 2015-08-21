@@ -273,6 +273,23 @@ App.prototype.showResults = function(flag) {
   app.getViewerCanvas().model.setHighlighted(0, false);
   app.getViewerCanvas().model.setAllVisibility(!flag);
   showSimulationResults(flag);
+
+  if (flag){
+    $("#resultSlider").show()
+
+    //hack
+    var offset = $(".solveIcon").offset();
+    var left = offset.left;
+    var top = offset.top;
+
+    $("#resultSlider").css({
+      left: left - 75,
+      top:top - 40
+    });
+
+  }else{
+    $("#resultSlider").hide()
+  }
 }
 
 App.prototype.getToken = function() {
@@ -347,6 +364,16 @@ App.prototype.attachEvents = function(){
       //hack
       $("#commentPanel").height($("#viewerDiv").height() - 2);
     },0);
+
+    var offset = $(".solveIcon").offset();
+    var left = offset.left;
+    var top = offset.top;
+
+    $("#resultSlider").css({
+      left: left - 75,
+      top:top - 40
+    });
+
   });
 
   $("#resultSlider").on("input change", function() { window.app.visualizeCurrentModelSimulation($("#resultSlider").val()) });
