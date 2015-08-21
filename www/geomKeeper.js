@@ -1,6 +1,5 @@
 var GeomKeeper = function() {
   this._geoms = {};
-  this._next  = 0;
 };
 
 GeomKeeper.getOrCreateInstance = function() {
@@ -16,30 +15,27 @@ GeomKeeper.prototype._reset = function() {
     app.getViewerCanvas().impl.scene.remove(geom);
   });
   this._geoms = {};
-  this._next = 0;
   app.invalidate();
 };
 
 GeomKeeper.prototype.addGeometry = function(geom) {
   app.getViewerCanvas().impl.scene.add(geom);
   app.invalidate();
-  this._geoms[this._next] = geom;
-  return this._next++;
+  this._geoms[geom.id] = geom;
+  return geom.id;
 };
 
-GeomKeeper.prototype.getGeometry = function(idx) {
-  if (!(idx in this._geoms)) {
-    throw new Error('invalid idx');
+GeomKeeper.prototype.getGeometry = function(id) {
+  if (!(id in this._geoms)) {
+    throw new Error('invalid id');
   }
-  if (!(idx < this._next)) {
-    throw new Error('invalid idx');
-  }
-  return this._geoms[idx];
+  return this._geoms[id];
 };
 
-GeomKeeper.prototype.removeGeometry = function(idx) {
-  geom = this.getGeometry(idx);
+GeomKeeper.prototype.removeGeometry = function(id) {
+  geom = this.getGeometry(id);
   app.getViewerCanvas().impl.scene.remove(geom);
   app.invalidate();
-  delete this._geoms[idx];
+  delete this._geoms[id];
 };
+

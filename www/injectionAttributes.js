@@ -62,30 +62,75 @@ InjectionPoint.prototype.delete = function(){
 var InjectionManager = function(){
   var viewer = app.getViewerCanvas();
 
-  var hitTestWithEvent = function(e, callback) {
-    if (Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.isOpen){
-      var x = e.offsetX/viewer.container.offsetWidth;
-      var y = e.offsetY/viewer.container.offsetHeight;
-      var location = viewer.utilities.getHitPoint(x, y);
-      callback(location);
-    }
+  var getRayCaster = function(e) {
+    var x = e.offsetX/viewer.container.offsetWidth;
+    var y = e.offsetY/viewer.container.offsetHeight;
+
+    y = 1.0 - y;
+    x = x * 2.0 - 1.0;
+    y = y * 2.0 - 1.0;
+    var vpVec = new THREE.Vector3(x, y, 1);
+    var viewerImpl = app.getViewerCanvas().impl;
+    var ray = viewerImpl.viewportToRay(vpVec);
+    return new THREE.Raycaster(ray.origin, ray.direction, viewerImpl.camera.near, viewerImpl.camera.far);
   };
 
   var self = this;
+  var hitTestForInjectionPoints = function(e, callback) {
+    if (Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.isOpen) {
+      return;
+    }
+
+    var rayCaster = getRayCaster(e);
+    var objects = _(self.injectionPoints).map(function(point) {
+      return app.getGeomKeeper().getGeometry(point.geomId);
+    });
+    var pointsFound = rayCaster.intersectObjects(objects);
+    if (pointsFound.length>0) {
+      callback(pointsFound[0]);
+    }
+  };
+
+  var hitTestForModelGeom = function(e, callback) {
+    if (!Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.isOpen) {
+      return;
+    }
+
+    var x = e.offsetX/viewer.container.offsetWidth;
+    var y = e.offsetY/viewer.container.offsetHeight;
+    var location = viewer.utilities.getHitPoint(x, y);
+    callback(location);
+  };
+
   $("#viewerDiv").click(function(e) {
-    hitTestWithEvent(e, function(location) {
+    hitTestForModelGeom(e, function(location) {
       if (!location) {
         return;
       }
       viewer.clearSelection();
       self.add(location, viewer);
     });
+
+    hitTestForInjectionPoints(e, function(found) {
+      if (!found) {
+        this.deselectAllPoints();
+        return;
+      }
+      viewer.clearSelection();
+
+      _(self.injectionPoints).each(function(injectionPoint){
+        if (injectionPoint.geomId === found.object.id) {
+          injectionPoint.select();
+        }
+      })
+    });
+
   });
 
   //updates cursor when over model
   $("#viewerDiv").on("mousemove", function(e) {
     var $that = $(this);
-    hitTestWithEvent(e, function(location) {
+    hitTestForModelGeom(e, function(location) {
       if (!location) {
         $that.removeClass("injectCursor");
         return;
