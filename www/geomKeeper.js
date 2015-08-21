@@ -1,3 +1,7 @@
+// TODO: To remove GeomKeeper. We no longer need this - I am guessing.
+// Found "geom.id" inside THREE.Sphere.
+// Changed implementation to use same id for now.
+
 var GeomKeeper = function() {
   this._geoms = {};
 };
