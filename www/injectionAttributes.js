@@ -174,6 +174,8 @@ InjectionManager.prototype.add = function(location, viewer) {
   injectionPoint.createGeometry(viewer);
   Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.addPoint(injectionPoint);
   this.injectionPoints.push(injectionPoint);
+
+  app.modelChanged();
 }
 
 InjectionManager.prototype.deselectAllPoints = function() {
@@ -188,6 +190,7 @@ InjectionManager.prototype._reset = function() {
   });
 
   this.injectionPoints = [];
+  app.modelChanged();
 };
 
 InjectionManager.prototype.removePoint = function(point) {
@@ -198,6 +201,8 @@ InjectionManager.prototype.removePoint = function(point) {
   if (index > -1) {
     this.injectionPoints.splice(index, 1);
   }
+
+  app.modelChanged();
 };
 
 InjectionManager.prototype.getInjectionPointsLocation = function()

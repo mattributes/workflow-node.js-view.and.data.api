@@ -131,6 +131,18 @@ App.prototype.getInjectionManager = function() {
   return this._injectionManager;
 };
 
+// Call this to notify the application of a change that can result on the simulation 
+App.prototype.modelChanged = function() {
+  this.showResults(false);
+
+  var enable = true;
+  if (!this.getInjectionManager() || !this.getInjectionManager().getInjectionPoints() || this.getInjectionManager().getInjectionPoints().length <= 0) {
+    enable = false;
+  }
+
+  UISimulationCtrls.instance().enable(enable);
+};
+
 App.prototype.getGeomKeeper = function() {
   return this._geomKeeper;
 };
@@ -242,6 +254,9 @@ App.prototype.resetLoginBtn = function() {
 };
 
 App.prototype.showResults = function(flag) {
+  if (!app.getViewerCanvas() || !app.getViewerCanvas().model)
+    return;
+
   app.getViewerCanvas().model.setHighlighted(0, false);
   app.getViewerCanvas().model.setAllVisibility(!flag);
   showSimulationResults(flag);
