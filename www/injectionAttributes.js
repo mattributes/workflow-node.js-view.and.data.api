@@ -45,6 +45,12 @@ InjectionPoint.prototype.select = function(){
   app._injectionManager.deselectAllPoints();
   app.getGeomKeeper().getGeometry(this.geomId).material.color.setHex( 0xff0000 );
   app.invalidate();
+
+  //when selecting a point - show panel
+  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.deselectAll();
+  Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.setVisible(true);
+  //hack!
+  this.uiContainer.addClass("active");
 }
 
 InjectionPoint.prototype.deselect = function(){
@@ -174,6 +180,8 @@ InjectionManager.prototype.add = function(location, viewer) {
   injectionPoint.createGeometry(viewer);
   Autodesk.ADN.Viewing.Extension.UIComponent.panelInstance.addPoint(injectionPoint);
   this.injectionPoints.push(injectionPoint);
+
+  app.modelChanged();
 }
 
 InjectionManager.prototype.deselectAllPoints = function() {
@@ -188,6 +196,7 @@ InjectionManager.prototype._reset = function() {
   });
 
   this.injectionPoints = [];
+  app.modelChanged();
 };
 
 InjectionManager.prototype.removePoint = function(point) {
@@ -198,6 +207,8 @@ InjectionManager.prototype.removePoint = function(point) {
   if (index > -1) {
     this.injectionPoints.splice(index, 1);
   }
+
+  app.modelChanged();
 };
 
 InjectionManager.prototype.getInjectionPointsLocation = function()

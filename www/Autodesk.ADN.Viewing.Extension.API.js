@@ -3,6 +3,32 @@
 // by Philippe Leefsma, May 2015
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+var UISimulationCtrls = function() {
+  var _solveBtn = null;
+  var _resultsBtn = null;
+};
+
+UISimulationCtrls.instance = function() {
+  if (!this._instance) {
+    this._instance = new UISimulationCtrls();
+  }
+
+  return this._instance;
+};
+
+UISimulationCtrls.prototype.enable = function(enabled) {
+  // 1: enabled, 2: disabled
+  if (enabled) {
+    this._solveBtn.setState(1);
+    this._resultsBtn.setState(1);
+  }
+  else {
+    this._solveBtn.setState(2);
+    this._resultsBtn.setState(2);
+  }
+}
+
 AutodeskNamespace("Autodesk.ADN.Viewing.Extension");
 
 Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
@@ -126,21 +152,22 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
       'Show Injection Points',
       onShowPanel);
 
-    var solveBtn = createButton(
+    var ctrls = UISimulationCtrls.instance();
+    ctrls._solveBtn = createButton(
       'Autodesk.ADN.UIComponent.Button.ShowSolve',
       'solveIcon',
       'Solve',
       onSolve);
 
-    var resultsBtn = createButton(
+    ctrls._resultsBtn = createButton(
       'Autodesk.ADN.UIComponent.Button.ShowResults',
       'resultsIcon',
       'Show/hide results',
       onShowHideResults);
 
     parentGroup.addControl(injectionLocationBtn);
-    parentGroup.addControl(solveBtn);
-    parentGroup.addControl(resultsBtn);
+    parentGroup.addControl(ctrls._solveBtn);
+    parentGroup.addControl(ctrls._resultsBtn);
   }
 
   /////////////////////////////////////////////
@@ -158,6 +185,10 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   //
   /////////////////////////////////////////////
   function onSolve() {
+    var ctrls = UISimulationCtrls.instance();
+    if (ctrls._solveBtn.getState() === 2)
+      return;
+
     window.app.solveCurrentModel();
   }
 
@@ -166,6 +197,10 @@ Autodesk.ADN.Viewing.Extension.UIComponent = function (viewer, options) {
   //
   /////////////////////////////////////////////
   function onShowHideResults() {
+    var ctrls = UISimulationCtrls.instance();
+    if (ctrls._resultsBtn.getState() === 2)
+      return;
+
     resultsVisible = !resultsVisible;
     window.app.showResults(resultsVisible);
   }

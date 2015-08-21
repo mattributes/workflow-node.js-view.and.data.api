@@ -36,12 +36,16 @@ var App = function() {
     // // Name/description of model
     // 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDE1LTA4LTE5LTE4LTQ3LTI1LXF0aWQybTlhOG1mbWh6a2l5MTE2ajd0b2llamMvc2hlbGxfMV9vZl9tZnhfY2FyZF9ob2xkZXIuc3Rs'
   ];
+  
+  this._commentsApp = null;
 };
 
 App.prototype.init = function() {
   if (this._userInfo !== null) {
     this.createUserContent();
   }
+
+  this.attachEvents();
 };
 
 App.prototype.createUserContent = function() {
@@ -129,6 +133,18 @@ App.prototype.getInjectionManager = function() {
   return this._injectionManager;
 };
 
+// Call this to notify the application of a change that can result on the simulation 
+App.prototype.modelChanged = function() {
+  this.showResults(false);
+
+  var enable = true;
+  if (!this.getInjectionManager() || !this.getInjectionManager().getInjectionPoints() || this.getInjectionManager().getInjectionPoints().length <= 0) {
+    enable = false;
+  }
+
+  UISimulationCtrls.instance().enable(enable);
+};
+
 App.prototype.getGeomKeeper = function() {
   return this._geomKeeper;
 };
@@ -171,6 +187,7 @@ App.prototype.loadDocument = function(urn) {
     self._geomKeeper = GeomKeeper.getOrCreateInstance();
     self._currentDocumentUrn = urn;
 
+    self.loadCommentsForCurrentDocument();
   }, function (error) {
     self._currentDocumentUrn = "";
     self._injectionManager = null;
@@ -202,6 +219,7 @@ App.prototype.onLoginCallback = function(href){
        // we are signed in
       $('#signIn').css('display', 'none');
       $('#signOut').css('display', 'inline');
+      $('#NavItems').show();
       $('#signOut').html(params['openid.alias3.value.alias1']);
 
       this._userInfo = {};
@@ -210,7 +228,7 @@ App.prototype.onLoginCallback = function(href){
       this._userInfo.oxygenId     = params['openid.alias3.value.alias3'] || '';
       this._userInfo.identityUrl  = params['openid.identity'] || '';
 
-      $("#userContent").css('display', 'inline');
+      $("#userContent").css('display', 'block');
       $("#loginRequired").css('display', 'none');
       this.createUserContent();
 
@@ -229,6 +247,7 @@ App.prototype.signOut = function() {
   Oxygen.signOut();
   this.resetLoginBtn();
   this._userInfo = null;
+  $('#NavItems').hide();
   $("#userContent").css('display', 'none');
   $("#loginRequired").css('display', 'inline');
 };
@@ -239,9 +258,85 @@ App.prototype.resetLoginBtn = function() {
 };
 
 App.prototype.showResults = function(flag) {
+  if (!app.getViewerCanvas() || !app.getViewerCanvas().model)
+    return;
+
   app.getViewerCanvas().model.setHighlighted(0, false);
   app.getViewerCanvas().model.setAllVisibility(!flag);
   showSimulationResults(flag);
 }
 
+App.prototype.getToken = function() {
+   var xmlHttp = new XMLHttpRequest();
+   xmlHttp.open('GET', this._tokenurl, false);
+   xmlHttp.send(null);
+   var resp =  JSON.parse(xmlHttp.responseText);
+   return resp.access_token;
+}
 
+App.prototype.loadCommentsForCurrentDocument = function() {
+   $('#commentPanel').html('');
+   this._commentsApp = null;
+
+   if(this.getCurrentDocumentUrn() === null) {
+      return;
+   }
+
+   var self = this;
+
+   // prepare comments setup
+   var settings = {
+      exportGlobal          : true,
+      fakeServer            : false,
+      markersAlwaysVisible  : true,
+      useAcm                : true,
+      urn                   : 'urn:adsk.comments:fs.file:' + self.getCurrentDocumentUrn(),
+      oauth2token           : self.getToken(),
+      version               : 1,
+      isOwner               : true,
+      commentId             : null,
+      env                   : self._config.environment,
+      avatarUrl             : self._userInfo.avatarUrl,
+      displayName           : self._userInfo.name,
+      oxygenId              : self._userInfo.oxygenId,
+      messageOverlayZIndex  : '999999',
+      features              : ['markups', 'replies', 'snapshot', 'annotations'],
+      //postCommentCallback   : function(dbComment) { self.commentsCallback(dbComment); }
+   };
+
+   //hack
+   $("#commentPanel").height($("#viewerDiv").height() - 2);
+
+   // create comments UI application
+
+   this._commentsApp = Autodesk.Comments2.createCommentsApp(null, "commentPanel", settings);
+   this._commentsApp.initialize();
+};
+
+//App.prototype.commentsCallback = function(dbComment) {
+//  console.log(dbComment);
+//};
+
+App.prototype.attachEvents = function(){
+  $("#FilesNav").on("click", function(){
+    console.log($("FilesDisplay"))
+    $("#FilesDisplay").toggleClass("active");
+  });
+
+  $("#CommentNav").on("click", function(){
+    console.log($("FilesDisplay"))
+    //$("#commentPanel").toggleClass("active");
+    $("#userContent").toggleClass("showComments")
+
+    //hack
+    $("#commentPanel").height($("#viewerDiv").height() - 2);
+  });
+
+  //hack
+  $(window).on("resize", function(){
+    window.setTimeout(function(){
+      //hack
+      $("#commentPanel").height($("#viewerDiv").height() - 2);
+    },0);
+  });
+}
