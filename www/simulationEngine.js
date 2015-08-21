@@ -1,3 +1,6 @@
+var heatmap_mesh = null;
+var heatmap_mesh_name = "HeatmapMesh";
+
 var runSimulation = function(inj_pts)
 {
 	var modelData = configureSimulation(inj_pts);
@@ -24,7 +27,7 @@ var configureSimulation = function(inj_pts)
 	for(var i=0; i<coords.length; i=i+stride, pt_count++){
 		res.pts.push({
 			id: pt_count,
-			xyz: [.11*coords[i], .11*coords[i+1], .11*coords[i+2]]
+			xyz: [.1*coords[i], .1*coords[i+1], .1*coords[i+2]]
 		})
 	}
 
@@ -40,7 +43,9 @@ var configureSimulation = function(inj_pts)
 		res.inj_pts.push(
 			{
 				id: i,
-				xyz: [inj_pts[i].x, inj_pts[i].y, inj_pts[i].z]
+				xyz: [inj_pts[i].location.x, inj_pts[i].location.y, inj_pts[i].location.z],
+				temperature: inj_pts[i].temperature,
+				velocity: inj_pts[i].velocity
 			});
 	}
 
@@ -57,6 +62,15 @@ var configureSimulation = function(inj_pts)
 	return res;
 }
 
+var showSimulationResults = function(flag)
+{
+	var mesh = getObjectByName(heatmap_mesh_name);
+	if(mesh){
+		mesh.visible = flag;
+		app.getViewerCanvas().impl.invalidate(true);
+	}
+}
+
 function pointToPointDistance3D(p, q)
 {
 	return (Math.sqrt(pointToPointDistance3DSquared(p, q)));
@@ -67,12 +81,17 @@ function pointToPointDistance3DSquared(p, q)
 	return (Math.pow(p[0] - q[0], 2) + Math.pow(p[1] - q[1], 2) + Math.pow(p[2] - q[2], 2));
 }
 
+function ptToInjPtDistanceFunction(p, inj_p)
+{
+	return pointToPointDistance3DSquared(p.xyz, inj_p.xyz) / inj_p.temperature;
+}
+
 function getClosestInjectionPoint(p, inj_p)
 {
 	var min_dist = Infinity; 
 	var closest_id = -1;
 	for(var i=0; i<inj_p.length; i++){
-		var d = pointToPointDistance3DSquared(p.xyz, inj_p[i].xyz);
+		var d = ptToInjPtDistanceFunction(p, inj_p[i]);
 		if(d < min_dist){
 			closest_id = inj_p[i].id;
 			min_dist = d;
@@ -111,13 +130,11 @@ function simulatePointTime(p, inj_pts)
 	var res = Infinity;
 	var closest_inj_pt_id = getClosestInjectionPoint(p, inj_pts);
 	if(closest_inj_pt_id != -1){
-		res = pointToPointDistance3D(p.xyz, inj_pts[closest_inj_pt_id].xyz);
+		// res = pointToPointDistance3D(p.xyz, inj_pts[closest_inj_pt_id].xyz);
+		res = ptToInjPtDistanceFunction(p, inj_pts[closest_inj_pt_id]);
 	}
 	return res;
 }	
-
-// var heatmap_material = null;
-// var heatmap_mesh = null;
 
 var numColorBins = 11;
 var colorScale = ['rgb(165,0,38)','rgb(215,48,39)','rgb(244,109,67)','rgb(253,174,97)','rgb(254,224,144)','rgb(255,255,191)','rgb(224,243,248)','rgb(171,217,233)','rgb(116,173,209)','rgb(69,117,180)','rgb(49,54,149)'];
@@ -166,7 +183,7 @@ function visualizeSimulationResults(pts, faces, res)
 	var heatmap_material = new THREE.MeshBasicMaterial(
 		{
 			color: 0xffffff,
-      		opacity: 0.0,
+      		opacity: 0.5,
       		shading: THREE.FlatShading,
       		side: THREE.DoubleSide,
       		vertexColors: THREE.VertexColors,
@@ -180,19 +197,32 @@ function visualizeSimulationResults(pts, faces, res)
 
 	var heatmap_geom = createHeatmapGeometry(pts, faces, res);
 
-	var heatmap_mesh =
+	removeObjectByName(heatmap_mesh_name);
+
+	heatmap_mesh =
 		new THREE.Mesh(
             heatmap_geom,
             heatmap_material
         );
     heatmap_mesh.position.set(0, 0, 0);
+    heatmap_mesh.name = heatmap_mesh_name;
 	
 	//adding to LMV
-	
-	viewerCanvas.impl.scene.add(heatmap_mesh);   
-	viewerCanvas.impl.invalidate(true);
+	app.getGeomKeeper().addGeometry(heatmap_mesh);
 }
 
+function removeObjectByName(name)
+{
+	var mesh = getObjectByName(name);
+	if(mesh){
+		app.getViewerCanvas().impl.scene.remove(mesh);
+	}
+}
+
+function getObjectByName(name)
+{
+	return app.getViewerCanvas().impl.scene.getObjectByName(name);
+}
 
 
 

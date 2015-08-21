@@ -3,6 +3,7 @@ var App = function() {
   this._injectionManager = null;
   this._viewerFactory = null;
   this._viewerCanvas = null;
+  this._geomKeeper = null;
   this._userInfo = null;
   this._tokenurl = 'http://' + window.location.host + '/api/token';
   this._apiUrl = "https://developer-stg.api.autodesk.com";
@@ -15,7 +16,6 @@ var App = function() {
 };
 
 App.prototype.init = function() {
-
   if (this._userInfo !== null) {
     this.createUserContent();
   }
@@ -125,6 +125,9 @@ App.prototype.getInjectionManager = function() {
   return this._injectionManager;
 };
 
+App.prototype.getGeomKeeper = function() {
+  return this._geomKeeper;
+};
 
 // TODO: Move this function to App.prototype.init().
 App.prototype.initViewerCanvas = function() {
@@ -157,6 +160,7 @@ App.prototype.loadDocument = function(urn) {
     viewerCanvas.load(pathInfoCollection.path3d[0].path);
 
     self._injectionManager = InjectionManager.getOrCreateInstance();
+    self._geomKeeper = GeomKeeper.getOrCreateInstance();
     self._currentDocumentUrn = urn;
 
   }, function (error) {
@@ -167,8 +171,9 @@ App.prototype.loadDocument = function(urn) {
 };
 
 App.prototype.solveCurrentModel = function() {
-    var injection_pts = this.getInjectionManager().getInjectionPointsLocation();
+    var injection_pts = this.getInjectionManager().getInjectionPoints();
     runSimulation(injection_pts);
+    this.showResults(true);
 };
 
 App.prototype.onLoginCallback = function(href){
@@ -224,3 +229,11 @@ App.prototype.resetLoginBtn = function() {
    $('#signIn').css('display', 'inline');
    $('#signOut').css('display', 'none');
 };
+
+App.prototype.showResults = function(flag) {
+  app.getViewerCanvas().model.setHighlighted(0, false);
+  app.getViewerCanvas().model.setAllVisibility(!flag);
+  showSimulationResults(flag);
+}
+
+
