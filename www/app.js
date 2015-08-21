@@ -96,6 +96,10 @@ App.prototype.doUploadFiles = function(files) {
 
 App.getAllDocumentUrns = function() {
   return [
+
+    // Piece die (STL)
+    "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvcGVhY2UuU1RM",
+    
     // Chopper (OBJ)
     "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6aHJsbXZoYWNrZXJzXzEvdWg2MC5vYmo=",
 
