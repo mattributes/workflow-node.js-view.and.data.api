@@ -2,7 +2,6 @@ var heatmap_mesh = null;
 var heatmap_mesh_name = "HeatmapMesh";
 var modelData_ = null;
 var simulationResults_ = null;
-var geom_id = -1;
 
 var runSimulation = function(inj_pts)
 {
@@ -279,21 +278,15 @@ function visualizeSimulationResults(pts, faces, res, time)
     heatmap_mesh.name = heatmap_mesh_name;
 	
 	//adding to LMV
-	geom_id = app.getGeomKeeper().addGeometry(heatmap_mesh);
+	app.getGeomKeeper().addGeometry(heatmap_mesh);
 }
 
 function removeObjectByName(name)
 {
-	if(geom_id !== -1){
-		app.getGeomKeeper().removeGeometry(geom_id);
+	var mesh = getObjectByName(name);
+	if(mesh){
+		app.getViewerCanvas().impl.scene.remove(mesh);
 	}
-	// var mesh = getObjectByName(name);
-	// if(mesh){
-	// 	app.getViewerCanvas().impl.scene.remove(mesh);
-	// 	if(geom_id !== -1){
-	// 		app.getGeomKeeper().removeGeometry(geom_id);
-	// 	}
-	// }
 }
 
 function getObjectByName(name)
